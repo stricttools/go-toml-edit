@@ -6,9 +6,9 @@ import (
 	"time"
 )
 
-// The accessor families read the conversion table in this phase, so two rows
-// the getters used to refuse start answering: an integer a float target holds
-// exactly, and the local date-time flavors a time.Time target accepts.
+// The accessor families read the conversion table, so the getters answer two
+// widening rows: an integer a float target holds exactly, and the local
+// date-time flavors a time.Time target accepts.
 
 // Fails if the float accessors stop accepting an integer the target holds
 // exactly -- the conversion table's integer-into-float row.

@@ -62,7 +62,7 @@ func requireParseError(t *testing.T, input string, wantLine, wantCol int) *Error
 }
 
 // =============================================================================
-// Phase 1a: Parser-level EOF-position tests (RED -- will fail until Phase 2)
+// Parser-level EOF-position tests
 // =============================================================================
 
 func TestParseErrorPosition_UnclosedArrayMidLine(t *testing.T) {
@@ -96,7 +96,7 @@ func TestParseErrorPosition_UnclosedArrayTableHeader(t *testing.T) {
 }
 
 // =============================================================================
-// Phase 1b: Lexer EOF-token position test (RED -- will fail until Phase 2)
+// Lexer EOF-token position test
 // =============================================================================
 
 func TestLexEOFTokenPosition(t *testing.T) {
@@ -119,7 +119,7 @@ func TestLexEOFTokenPosition(t *testing.T) {
 }
 
 // =============================================================================
-// Phase 1c: Guard tests (should already PASS -- lexer catches these)
+// Guard tests (the lexer catches these)
 // =============================================================================
 
 func TestParseErrorPosition_UnclosedString_Guard(t *testing.T) {
@@ -148,7 +148,7 @@ func TestParseErrorPosition_EmptyInput_Guard(t *testing.T) {
 }
 
 // =============================================================================
-// Phase 1d: definitionTracker position tests (RED -- will fail until Phase 2)
+// definitionTracker position tests
 // =============================================================================
 
 func TestParseErrorPosition_DuplicateKey(t *testing.T) {
