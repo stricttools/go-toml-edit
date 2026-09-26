@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "name": "go-toml-edit",
   "slug": "go-toml-edit",
   "version": "0.4.2",
@@ -3615,5 +3615,9 @@
   ],
   "posts": [],
   "last_gen": "2026-09-15T20:39:54.877397+00:00",
-  "theme": "minimal"
+  "theme": "minimal",
+  "vocabulary": {
+    "accepted": [],
+    "rejected": []
+  }
 }

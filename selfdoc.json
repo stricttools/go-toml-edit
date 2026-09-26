@@ -14,8 +14,8 @@
       "scripts"
     ]
   },
-  "docs": ".stricttools/docs/",
-  "output": ".stricttools/docs-cache/build/",
+  "docs": "stricttools/docs/",
+  "output": "stricttools/.docs-cache/build/",
   "versions": [
     {
       "version": "0.4.3"
@@ -37,8 +37,8 @@
     "repo": "smm-h/selfdoc-cache"
   },
   "root_files": [
-    ".stricttools/docs/_README.md",
-    ".stricttools/docs/_CLAUDE.md"
+    "stricttools/docs/_README.md",
+    "stricttools/docs/_CLAUDE.md"
   ],
   "search_engine": "pagefind",
   "author": {
