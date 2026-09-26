@@ -252,8 +252,8 @@ the ruled surface; staticcheck clean (catches stranded dead code).
 
 ## Phase 12 — Documentation truth
 
-Sweep the hand-written docs sources (`.stricttools/docs/_README.md`, `.stricttools/docs/_CLAUDE.md`,
-`.stricttools/docs/usage-guide.md`, `.stricttools/docs/design.md`, the package doc comment,
+Sweep the hand-written docs sources (`stricttools/docs/_README.md`, `stricttools/docs/_CLAUDE.md`,
+`stricttools/docs/usage-guide.md`, `stricttools/docs/design.md`, the package doc comment,
 examples, `benchmarks.txt`) against the shipped behavior: strictness, the
 error contract, the read-layer, the two-surfaces contract sentence, the
 Set contract, deletions and renames, the named-import README example and
