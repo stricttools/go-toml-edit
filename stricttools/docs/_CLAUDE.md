@@ -59,7 +59,7 @@ go test -fuzz FuzzParse # fuzz the parser
 
 ## Release workflow
 
-This project uses [rlsbl](https://github.com/smm-h/rlsbl) for release orchestration.
+This project uses [rlsbl](https://github.com/stricttools/rlsbl) for release orchestration.
 
 - The bump type, description and context go in `.rlsbl/releases/unreleased.toml` (scaffold it with `rlsbl release init`); there is no flag form of them
 - Release with `rlsbl release run --no-allow-dirty --watch --approve-consequential`

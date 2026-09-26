@@ -1,7 +1,7 @@
 {
   "version": "0.4.3",
   "description": "Zero-dep TOML editing library for Go with comment preservation",
-  "repo": "https://github.com/smm-h/go-toml-edit",
+  "repo": "https://github.com/stricttools/go-toml-edit",
   "base_url": "https://smmh.dev/go-toml-edit",
   "source": [
     {
