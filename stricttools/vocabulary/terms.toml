@@ -2,4 +2,4 @@ format_version = 1
 
 [[accepted]]
 word = "tomledit"
-meaning = "The Go package name of this project, a comment-preserving TOML parser and editor library imported from github.com/smm-h/go-toml-edit."
+meaning = "The Go package name of this project, a comment-preserving TOML parser and editor library imported from github.com/stricttools/go-toml-edit."

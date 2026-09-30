@@ -24,7 +24,7 @@ import (
 	"strings"
 	"testing"
 
-	tomledit "github.com/smm-h/go-toml-edit"
+	tomledit "github.com/stricttools/go-toml-edit"
 )
 
 // diagnosticFile is the one file allowed to construct diagnostics.

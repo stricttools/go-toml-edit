@@ -12,13 +12,13 @@ go-toml-edit is a Go library for parsing, editing, and serializing TOML document
 ## Installation
 
 ```
-go get github.com/smm-h/go-toml-edit
+go get github.com/stricttools/go-toml-edit
 ```
 
 All public types and functions live in the `tomledit` package. The package name does not match the last element of the module path, so import it under its name:
 
 ```go
-import tomledit "github.com/smm-h/go-toml-edit"
+import tomledit "github.com/stricttools/go-toml-edit"
 ```
 
 The package has no runtime dependencies: it imports the standard library and nothing else.
@@ -882,7 +882,7 @@ package main
 import (
     "log"
 
-    tomledit "github.com/smm-h/go-toml-edit"
+    tomledit "github.com/stricttools/go-toml-edit"
 )
 
 func main() {

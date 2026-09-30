@@ -193,7 +193,7 @@ jobs:
           # the proxy for the right module. The proxy resolves subdir modules
           # via their companion subdir tag (<subdir>/vX.Y.Z) automatically, so
           # no manual tag construction is needed here.
-          MODULE="github.com/smm-h/go-toml-edit"
+          MODULE="github.com/stricttools/go-toml-edit"
 
           # RELEASE_TAG is resolved via step env (never inlined into the
           # script -- inputs.tag is user-controlled). Normalise it to a bare

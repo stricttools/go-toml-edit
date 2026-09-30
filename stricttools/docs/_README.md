@@ -27,7 +27,7 @@ import (
 	"fmt"
 	"log"
 
-	tomledit "github.com/smm-h/go-toml-edit"
+	tomledit "github.com/stricttools/go-toml-edit"
 )
 
 func main() {
@@ -59,7 +59,7 @@ port = 9090
 ## Installation
 
 ```
-go get github.com/smm-h/go-toml-edit
+go get github.com/stricttools/go-toml-edit
 ```
 
 **No runtime dependencies.** The package imports the standard library and
@@ -363,7 +363,7 @@ captured run beside BurntSushi/toml.
 
 ## API Reference
 
-[pkg.go.dev/github.com/smm-h/go-toml-edit](https://pkg.go.dev/github.com/smm-h/go-toml-edit)
+[pkg.go.dev/github.com/stricttools/go-toml-edit](https://pkg.go.dev/github.com/stricttools/go-toml-edit)
 
 ## Deferred work
 

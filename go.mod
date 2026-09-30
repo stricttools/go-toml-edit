@@ -1,4 +1,4 @@
-module github.com/smm-h/go-toml-edit
+module github.com/stricttools/go-toml-edit
 
 go 1.23
 

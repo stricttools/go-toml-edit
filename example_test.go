@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"time"
 
-	tomledit "github.com/smm-h/go-toml-edit"
+	tomledit "github.com/stricttools/go-toml-edit"
 )
 
 func ExampleParse() {
