@@ -2,7 +2,7 @@
   "schema_version": 2,
   "name": "go-toml-edit",
   "slug": "go-toml-edit",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Zero-dep TOML editing library for Go with comment preservation",
   "language": "go",
   "base_url": "https://smmh.dev/go-toml-edit",
@@ -3614,10 +3614,15 @@
     }
   ],
   "posts": [],
-  "last_gen": "2026-09-15T20:39:54.877397+00:00",
+  "last_gen": "2026-09-30T16:14:13.086358+00:00",
   "theme": "minimal",
   "vocabulary": {
-    "accepted": [],
+    "accepted": [
+      {
+        "word": "tomledit",
+        "aliases": []
+      }
+    ],
     "rejected": []
   }
 }
