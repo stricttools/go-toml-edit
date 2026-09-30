@@ -62,7 +62,7 @@ go test -fuzz FuzzParse # fuzz the parser
 This project uses [rlsbl](https://github.com/stricttools/rlsbl) for release orchestration.
 
 - The bump type, description and context go in `.rlsbl/releases/unreleased.toml` (scaffold it with `rlsbl release init`); there is no flag form of them
-- Release with `rlsbl release run --no-allow-dirty --watch --approve-consequential`
+- Release with `rlsbl release run --watch --approve-consequential`
 - Go library -- no publish step. Tagged releases are available via `go get`.
 - Never publish manually, and never push manually -- the release is the only push
 

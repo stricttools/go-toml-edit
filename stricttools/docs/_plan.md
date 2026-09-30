@@ -283,7 +283,7 @@ stays active awaiting the spec); the founding-remainder todo splits
 (error-handling section done). Changelog coverage complete (every commit
 covered; breaking entries typed). Release file with description and
 context, minor bump, then
-`rlsbl release run --no-allow-dirty --watch --approve-consequential`.
+`rlsbl release run --watch --approve-consequential`.
 Verify: release completes green through CI; the new version resolves from
 the proxy.
 
