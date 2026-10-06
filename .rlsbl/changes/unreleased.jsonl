@@ -6,3 +6,4 @@
 {"format_version":1,"id":"18da26c178b56c62e228c9fb45864ad4874db2b0b0f31700","commits":["528d7e0b19fa5ea2c70d24d2d2ba48a1e64b11f5"],"user_facing":true,"description":"**The Go module path moved to `github.com/stricttools/go-toml-edit`.** The repository lives in the stricttools organization, so `github.com/smm-h/go-toml-edit` is no longer this module's path: `go get github.com/stricttools/go-toml-edit`, and change every import and `require` from the old path.","type":"breaking"}
 {"format_version":1,"id":"18dc09292b329be819cae13119334c639c1c02f42a73e8df","commits":["3dbb1ad41ce7e8d8d887960ce62d3f8ab2ef3100"],"user_facing":false}
 {"format_version":1,"id":"18dc092f4d0fb949ace50f30884f41a98d765e82d3921a62","commits":["b741344be3838b4780f5b715a9f0fcb680e1a26e"],"user_facing":false}
+{"format_version":1,"id":"18dc0933b1a1aa70c0b67a6987d34a3a9d6af5fb8558e6d6","commits":["03b890daa2a88ab1460253779465c004f15b04d3"],"user_facing":false}
