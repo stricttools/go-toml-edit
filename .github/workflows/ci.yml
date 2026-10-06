@@ -41,11 +41,16 @@ jobs:
         if: matrix.go == 'floor'
         with:
           go-version: ${{ steps.floor.outputs.version }}
-      # setup-go reads go.mod's toolchain line first, then its go directive.
+      # setup-go's go-version-file reads only the go directive, so the
+      # toolchain line is read here the same way the floor leg reads its line.
+      - name: Read the toolchain line
+        if: matrix.go == 'development'
+        id: development
+        run: echo "version=$(awk '$1 == "toolchain" { sub(/^go/, "", $2); print $2 }' go.mod)" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-go@v6
         if: matrix.go == 'development'
         with:
-          go-version-file: go.mod
+          go-version: ${{ steps.development.outputs.version }}
       - name: gofmt
         run: |
           unformatted="$(gofmt -l .)"
