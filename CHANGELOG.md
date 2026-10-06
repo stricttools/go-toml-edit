@@ -2,6 +2,14 @@
 
 # Changelog
 
+## 0.5.0
+
+The Go module path moves to github.com/stricttools/go-toml-edit, following the repository into the stricttools organization.
+
+### Breaking
+
+- **The Go module path moved to `github.com/stricttools/go-toml-edit`.** The repository lives in the stricttools organization, so `github.com/smm-h/go-toml-edit` is no longer this module's path: `go get github.com/stricttools/go-toml-edit`, and change every import and `require` from the old path.
+
 ## 0.4.3
 
 The tool describes itself with one sentence everywhere, and its documentation moved onto selfdoc's .stricttools/ layout.
