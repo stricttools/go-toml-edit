@@ -1,8 +1,14 @@
 format_version = 1
-rlsbl_version = "0.130.0"
+rlsbl_version = "0.131.0"
 
 [files]
-".github/workflows/ci.yml" = "a4eb37a8927ffda2aa646e45ac6f849648a53ea7fb4efe0df4fda3c9946c28f9"
-".github/workflows/publish.yml" = "b61850c31a1b7e2276cbe4a3dae0ff4f5d8132d41fb5cff7a0d3673ca5503dc0"
-".gitignore" = "a850ebf49c61c59825e088bb50c5d3e5e1d39f77cb913286def4655cda7d05bb"
-"VERSION" = "d915cc95d6ca8f47ae297713ed46d4e5c5d99ddd29fc3c61e263bdf305f2b5b0"
+".claude/go.mod" = "dd4165ab2ea2c7f27698a1b1ca5bfa8e08cfb21aae5c390b1675e65aab3cac27"
+".github/workflows/ci.yml" = "4e3189f9e5cab311027876cd83df4dcd49d2d1dc32bf78ef5f1bd948e4bf47a8"
+".github/workflows/publish.yml" = "62ea34b1e3cac0c10a13878f1e343149a19bf998afeb6e1923809aaa5c3f37ae"
+".strictmetadata/go.mod" = "dd4165ab2ea2c7f27698a1b1ca5bfa8e08cfb21aae5c390b1675e65aab3cac27"
+"VERSION" = "a0ad50640139a524f86591157145bf1d4674ea9c065bfea21558f0f7b04430c8"
+"experiments/.gitignore" = "315847fcdb038a16ecf2773e67ed8c8fe88479b37062d7a72ed1732f09062633"
+"experiments/go.mod" = "559c21464c216881d2a25931481a9d4fb2f4df2ebcf9425642252d56a2fc1300"
+"screenshots/.gitignore" = "315847fcdb038a16ecf2773e67ed8c8fe88479b37062d7a72ed1732f09062633"
+"screenshots/go.mod" = "559c21464c216881d2a25931481a9d4fb2f4df2ebcf9425642252d56a2fc1300"
+"todo/go.mod" = "dd4165ab2ea2c7f27698a1b1ca5bfa8e08cfb21aae5c390b1675e65aab3cac27"
