@@ -1,5 +1,5 @@
 {
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Zero-dep TOML editing library for Go with comment preservation",
   "repo": "https://github.com/stricttools/go-toml-edit",
   "base_url": "https://smmh.dev/go-toml-edit",
@@ -18,7 +18,7 @@
   "output": ".strictmetadata/.docs-cache/build/",
   "versions": [
     {
-      "version": "0.5.0"
+      "version": "0.5.1"
     }
   ],
   "locales": [

@@ -2,6 +2,14 @@
 
 # Changelog
 
+## 0.5.1
+
+Deleting an entry of an array of tables now also removes the headers of the tables nested in that entry.
+
+### Fixes
+
+- Deleting an entry of an array of tables (for example `Delete("members[0]")`) now also removes the headers of the tables nested in that entry, such as `[[members.pipelines]]` and `[members.sub]`, whose pairs used to attach to the entry that remains.
+
 ## 0.5.0
 
 The Go module path moves to github.com/stricttools/go-toml-edit, following the repository into the stricttools organization.
