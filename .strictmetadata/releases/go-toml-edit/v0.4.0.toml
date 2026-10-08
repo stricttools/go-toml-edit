@@ -1,0 +1,38 @@
+# strictspec document version gate (do not remove)
+format_version = 2
+# Version bump type: patch, minor, major, infra, or prerelease
+#   prerelease: advance an existing pre-release (0.6.0-beta.0 -> -beta.1)
+bump = "minor"
+# Short description of this release (required)
+description = "The strictness-and-fidelity redesign: a logical read-layer, strict-only decoding with value-returning entry points, a unified diagnostic contract, fragment-based rendering with canonical spellings, and a hardened edit surface that refuses to corrupt a document."
+# Optional context explaining why these changes were made
+context = """
+This release is the whole redesign campaign shipped at once. The library's
+surface was rebuilt around what its consumers actually hand-rolled downstream:
+strict decoding (unknown keys, exact key matching, every independent violation
+collected), a logical read-layer that answers what a document means regardless
+of how its tables are spelled, one diagnostic type with a closed kind set and
+compiler-style rendering, and byte-precise fragment splicing so an edit
+touches only the bytes it names. Every edit sequence that used to corrupt a
+document or panic its readers now refuses with a classified diagnostic. The
+decode entry points return the value they build, so a failed decode leaves
+nothing to inspect; the custom-decoder hooks were removed outright, making the
+engine the only decode path. Format() reformats: whitespace is formatting,
+comments are content, and only content is preserved. Breaking throughout, as a
+pre-stable redesign should be; the changelog's breaking entries carry the
+migration for every removed or renamed surface.
+"""
+# Pre-release channel: alpha, beta, rc, or stable (ordered;
+# demotion is an error). With patch/minor/major it ENTERS the
+# channel (0.5.2 + minor + alpha -> 0.6.0-alpha.0); with
+# bump = "prerelease" it promotes, and "stable" strips the
+# suffix. See docs/release-workflow.md#the-pre-release-channel.
+# preid = ""
+# Set to true to generate a blog post for this release
+# blog = false
+include = ["go"]
+exclude = []
+release_commit = "152ccafa83d10a55d4dfd65f9053b88fb9067918"
+
+[released_trees]
+"." = "0f153e6c6185f3ec69f9a9e7382d801a21fa2ebe"

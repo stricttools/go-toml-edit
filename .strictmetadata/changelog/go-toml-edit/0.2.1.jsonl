@@ -1,0 +1,1 @@
+{"format_version":2,"id":"18dc880ecf5f3cd4b2d15555489b4dc2922a46dc9093ecb9","commits":["fad5dce0369db54212fd9fce1f8e9e20207258a9"],"user_facing":true,"description":"**Bug fix.** Inline tables in `Marshal` output now have deterministic key ordering.","type":"fix"}

@@ -1,0 +1,23 @@
+# strictspec document version gate (do not remove)
+format_version = 2
+# Version bump type: patch, minor, major, infra, or prerelease
+#   prerelease: advance an existing pre-release (0.6.0-beta.0 -> -beta.1)
+bump = "patch"
+# Short description of this release (required)
+description = "The library describes itself consistently in its README and package documentation, and its documentation base is the unified site."
+# Optional context explaining why these changes were made
+context = ""
+# Pre-release channel: alpha, beta, rc, or stable (ordered;
+# demotion is an error). With patch/minor/major it ENTERS the
+# channel (0.5.2 + minor + alpha -> 0.6.0-alpha.0); with
+# bump = "prerelease" it promotes, and "stable" strips the
+# suffix. See docs/release-workflow.md#the-pre-release-channel.
+# preid = ""
+# Set to true to generate a blog post for this release
+# blog = false
+include = ["go"]
+exclude = []
+release_commit = "f54b9299b1ee932ba90357c7f893bfdf1d6e188c"
+
+[released_trees]
+"." = "1aa2b934c826eebeb62384d2de5f4b2b907ff23a"

@@ -1,0 +1,17 @@
+{"format_version":2,"id":"18dc880ecf4d84c0376ff83bf1f74843b2727c3d702afb7f","commits":["571008f1954ffb5e1a359c48ccaa578c9c294806"],"user_facing":false}
+{"format_version":2,"id":"18dc880ecf4e0f3f170ed0af101641898c5a1f5e52dc44be","commits":["ce1899a3d32212861b482572cc6ba4898826f755"],"user_facing":false}
+{"format_version":2,"id":"18dc880ecf4e65118b4f6bf6d6f64ceab6ae3bc3a1889b6c","commits":["0c7d6906b5f29469d8ea83ca557e43f38f630111"],"user_facing":false}
+{"format_version":2,"id":"18dc880ecf4ed3818d1f491940214cb0bab14c4c2269e1a6","commits":["d2198b929ff02feb17ff7355b190aafed7277a94"],"user_facing":false}
+{"format_version":2,"id":"18dc880ecf4f19480136c609d31f42508b39092bdd7fee3c","commits":["01caf82522305c6bd079e9e5e1e79fe723bb56a9"],"user_facing":false}
+{"format_version":2,"id":"18dc880ecf4f6f25af59f650e5a7400fa8f17557c7e6b734","commits":["66a4363110942398abd4fe86fc7fe07d5fc1e1c0"],"user_facing":false}
+{"format_version":2,"id":"18dc880ecf4fc081c8f7b81602b6400a8fe36e1cb4049310","commits":["61272d33da58184713170ac24108e7bd405424bf"],"user_facing":false}
+{"format_version":2,"id":"18dc880ecf5012051a65521907f342348144e52c1c084065","commits":["72cd46ea5d7a074fc32f5cdab99766c148dc4ee3"],"user_facing":false}
+{"format_version":2,"id":"18dc880ecf52739e3cc5d555f5084997b05c4d8c3f3b7045","commits":["0657c9c9949ffacd92cf3e6c9de512104de44d57"],"user_facing":false}
+{"format_version":2,"id":"18dc880ecf53d04fc0441d35940f4dbead94cc72b52bc85e","commits":["6c4177ac2b639e54f772657d16ee462664ae0dc5"],"user_facing":false}
+{"format_version":2,"id":"18dc880ecf59257aa3d3ac20d6604958af599bdfded45daa","commits":["3e9227cf0f128261da5b036a82cd5ca09d5767a0"],"user_facing":false}
+{"format_version":2,"id":"18dc880ecf59e0587010a4984570494797f4de9762597615","commits":["7b522dec263169f7127e5a0efa8c8704ceaad7bd"],"user_facing":false}
+{"format_version":2,"id":"18dc880ecf5a8f5a0f293c3d55f44a31b189a66d11b50cf6","commits":["8f8fa37223a44585e4e7e884fcff4c2961e130a2"],"user_facing":false}
+{"format_version":2,"id":"18dc880ecf5b35cad1dd5dfcb0d64a76834ab9dc936d5f98","commits":["6aacc9105befd2c0d6ee1c887a22a4582f87e84f"],"user_facing":true,"description":"**New feature.** `Marshal(v any) ([]byte, error)` serializes Go maps to TOML bytes. Supports flat and nested `map[string]any` with all primitive types. Nested maps become `[section]` headers; keys are sorted for deterministic output.","type":"feature"}
+{"format_version":2,"id":"18dc880ecf5c39e173dc7d560e064481bf8b68a24dea7085","commits":["52349ef8ca7762749fcf2ad1ca481eb4b2126040","9e58ee7d5ce732ff463d8a917efeb67d1e935991"],"user_facing":false}
+{"format_version":2,"id":"18dc880ecf5d11e713b7122ad8824f74b2e2e06e951bfb70","commits":["21d3691a231c00a4d45ec66ab32f7fbbdef007d8"],"user_facing":false}
+{"format_version":2,"id":"18dc880ecf5db16a4e3555cdc9a4468cb8300ab46ebf55f6","commits":["00c5d139a3f3f2bae86fde6fb402f1000983dbd8"],"user_facing":false}

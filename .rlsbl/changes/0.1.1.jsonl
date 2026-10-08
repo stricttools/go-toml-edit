@@ -1,7 +1,0 @@
-{"format_version":1,"commits":["48b7cb9a9531ab57c4e2c9e3ca0db1f537268d02"],"user_facing":true,"description":"**Fix.** Preserve comments between array elements when arrays are re-rendered.","type":"fix"}
-{"format_version":1,"commits":["fb3b4e515f46ae0d0d577774fa18015fcba27475"],"user_facing":true,"description":"**Breaking.** Walk now requires explicit WalkMode parameter (WalkLeaves or WalkAll).","type":"breaking"}
-{"format_version":1,"commits":["dd7347a70919bedc8c503429959d555ad3820a91"],"user_facing":true,"description":"**Fix.** Preserve original key formatting (quoted vs bare) for clean keys in dirty KVs; fix key node not marked dirty on Rename.","type":"fix"}
-{"format_version":1,"commits":["f6ee7c527fa173c68848436ac5996b94e94a271a"],"user_facing":false}
-{"format_version":1,"commits":["b6621c168055faa15e033bf4c95423aa03ee85c3"],"user_facing":false}
-{"format_version":1,"commits":["e5722deb9ccee1b896aff3fd95c5da63df20d061"],"user_facing":false}
-{"format_version":1,"commits":["4f38785dd63c31f7dcfd142bbaa0b76de65e6bb5"],"user_facing":false}

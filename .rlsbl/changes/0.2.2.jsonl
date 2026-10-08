@@ -1,8 +1,0 @@
-{"format_version":1,"commits":["534a2c220afe14578a69e32cfded012a717750ef"],"user_facing":false}
-{"format_version":1,"commits":["9ee012933cac436e7abc310d22f68fa00caa132d","36acf8d1cae37e9a17877bca97021307594dc1f4"],"user_facing":true,"description":"**Bug fix.** ParseError now reports correct line/column positions for EOF errors and duplicate-key/table errors (previously reported line 0, column 0).","type":"fix"}
-{"format_version":1,"commits":["f233bacdf841392226e5079ff25882011b3485e4","25a971b50f265786da0378d76dfd1349b1ad8424"],"user_facing":false}
-{"format_version":1,"commits":["e02d25f44e36bbfdca2fd5ae1b6940be50c76256"],"user_facing":false}
-{"format_version":1,"commits":["7365231fbac4705391283bd4f7b67ba96dd214b0","c6f71d07d64612886c84a598cd9bf3e6b9e94c77"],"user_facing":false}
-{"format_version":1,"commits":["c23e98aca13e51f21e375adb675ea9b3ce469e02","d1bed3f27c47586c2f0c6f36cb7ff2a80a170266","3cc6f19a55fefa765ff4760b445eeb0d355506ed","c6172f5b1ac0cd37ea46decf4943b0390107bc16","391bb2eb373465501efe3d59988fb64254b205fe"],"user_facing":false}
-{"format_version":1,"commits":["02b6330a0e3e5a03b6760e6e3b87616de2521e94","a1a117db830acc7ac33107ff19922c0cb3a1d701","d1751194aea1bfef2fc87b838b184573e16a316c","ccad0d6f3cc872a29dc480d65f5dac10541f1564"],"user_facing":false}
-{"format_version":1,"commits":["1351291b666e966415047cb92194ae60eef199ab"],"user_facing":false}

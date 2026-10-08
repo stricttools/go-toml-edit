@@ -1,0 +1,14 @@
+# strictspec document version gate (do not remove)
+format_version = 2
+# Version bump type: patch, minor, or major
+bump = "patch"
+# Short description of this release (required)
+description = "Deterministic inline table key ordering"
+# Optional context explaining why these changes were made
+context = "mapToInlineTableNode now sorts keys alphabetically, fixing non-deterministic output for deeply nested maps in Marshal."
+include = ["go"]
+exclude = []
+release_commit = "8fd0ac2b87f9a0f3f5322e8dd6b79b49740db365"
+
+[released_trees]
+"." = "df8372285282651b7879852c37e0e701976cfabc"

@@ -1,0 +1,24 @@
+format_version = 1
+[[lifecycle]]
+subject = "go-toml-edit"
+status = "active"
+from = 2026-10-08
+reason = "active when rlsbl's records moved to the .strictmetadata layout"
+[[licenses]]
+subject = "go-toml-edit"
+license = "MIT"
+from = 2026-10-08
+reason = "declared by the owner when rlsbl's records moved to the .strictmetadata layout"
+[[registry_names]]
+registry = "go"
+name = "github.com/stricttools/go-toml-edit"
+subject = "go-toml-edit"
+recorded_since = 2026-10-08
+[[identities]]
+subject = "go-toml-edit"
+facet = "releasable-name"
+value = "go-toml-edit"
+registry = ""
+tag_patterns = ["v*"]
+from = 2026-05-09
+reason = "recorded when rlsbl's records moved to the .strictmetadata layout"

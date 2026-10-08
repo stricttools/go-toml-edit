@@ -1,0 +1,25 @@
+format_version = 1
+repository_layout = "standalone"
+release_branches = ["main", "master"]
+
+[timeouts]
+push_seconds = 120
+
+[[releasables]]
+name = "go-toml-edit"
+tag_format = "v{version}"
+publish_mode = "ci"
+hooks = { post_release = ["bash .strictmetadata/release-hooks/go-toml-edit/post-release.sh"] }
+
+[[members]]
+path = "."
+name = "root"
+releasable = "go-toml-edit"
+targets = [{ name = "go" }]
+
+[[members.pipelines]]
+name = "go"
+type = "go"
+target = "go"
+local = false
+artifact = "library"

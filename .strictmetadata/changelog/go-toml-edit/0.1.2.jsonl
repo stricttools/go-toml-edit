@@ -1,0 +1,4 @@
+{"format_version":2,"id":"18dc880ecf4bce7ba2063dfd6a3a46e6abd37b46ec057101","commits":["6a57cf4376bd60a2e6bc4c197a3ddb3514087507"],"user_facing":true,"description":"**Fix.** Preserve intra-array comments in Format() output.","type":"fix"}
+{"format_version":2,"id":"18dc880ecf4c50c3645dd27a9d4a4c76b34b252af7a2f9fa","commits":["bf39a87ceb516bf9071071b70704bbb59926391a"],"user_facing":true,"description":"**Fix.** Fix README Walk example to include required WalkMode parameter.","type":"fix"}
+{"format_version":2,"id":"18dc880ecf4c9f4e1828f04984f242068cf5d4efab60e6f2","commits":["660d35cd4c28b8b6c920724dfa657047bbb76dc8"],"user_facing":false}
+{"format_version":2,"id":"18dc880ecf4cd78ac468475e072d423a8cbf6af9d82e2daa","commits":["4e1adbacf33041ef884efd915124cbc5fd6010ac"],"user_facing":false}
