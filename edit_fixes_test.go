@@ -58,3 +58,50 @@ func TestDelete_MissingKeyInInlineTableLeavesBytesAlone(t *testing.T) {
 		t.Errorf("after a no-op delete the document reads %q, want %q", got, src)
 	}
 }
+
+// Fails if deleting an entry of an array-of-tables leaves behind the headers of
+// the tables nested inside it: a [[members.pipelines]] or [members.sub] header
+// left in the document would attach its pairs to the entry that remains.
+func TestDelete_ArrayTableEntryTakesNestedHeaders(t *testing.T) {
+	const src = `[[members]]
+name = "a"
+
+[[members.pipelines]]
+type = "go"
+
+[members.sub]
+x = 1
+
+[[members]]
+name = "b"
+`
+	// The blank line before the remaining [[members]] is that header's own
+	// leading trivia, so it stays.
+	const want = `
+[[members]]
+name = "b"
+`
+	doc, err := Parse([]byte(src))
+	if err != nil {
+		t.Fatalf("parse error: %v", err)
+	}
+	if err := doc.Delete("members[0]"); err != nil {
+		t.Fatalf("Delete(members[0]) returned %v", err)
+	}
+	got := doc.Bytes()
+	if string(got) != want {
+		t.Errorf("after deleting members[0] the document reads %q, want %q", got, want)
+	}
+	reparsed, err := Parse(got)
+	if err != nil {
+		t.Fatalf("re-parse of %q failed: %v", got, err)
+	}
+	if name, err := reparsed.GetString("members[0].name"); err != nil || name != "b" {
+		t.Errorf("re-parsed members[0].name = %q, %v; want \"b\"", name, err)
+	}
+	for _, path := range []string{"members[0].pipelines", "members[0].sub", "members[1]"} {
+		if reparsed.Has(path) {
+			t.Errorf("re-parsed document still has %s", path)
+		}
+	}
+}

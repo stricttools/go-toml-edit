@@ -662,8 +662,12 @@ func (d *Document) deleteIndexFromParent(parent layerPos, index int) error {
 		if err != nil {
 			return nil // silent no-op for out-of-range
 		}
-		// Remove the array-of-tables entry from the document's children.
-		d.removeChild(parent.records[idx].node)
+		// Remove the entry's [[header]] from the document's children, and the
+		// headers of every table nested inside it, which are document children
+		// too and would otherwise attach to the entry that remains.
+		for _, header := range appendHeaderNodes(nil, parent.records[idx]) {
+			d.removeChild(header)
+		}
 		return nil
 	}
 	switch p := parent.node.(type) {
