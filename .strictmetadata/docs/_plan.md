@@ -114,7 +114,7 @@ benchmarks compile and run.
 the drift note), `AppendToArray`, `RemoveFromArray`, the `[]Pair` ordered
 inline-table input (duplicate-key refusal), `EnsureDefaults` with
 `[]Default` (ordered, full paths, standard-table intermediates,
-partial-application contract). The pgdesign reorder acceptance test
+partial-application contract). The strictsql reorder acceptance test
 (grouping with comments traveling, drops composed as delete-then-permute)
 BEFORE freezing the op signatures — the record marks them provisional
 until it passes. The small write-path fixes: unsigned overflow refusal,
@@ -294,7 +294,7 @@ strictcli; safegit in the same working session (its workspace uses the
 strictcli checkout); then each remaining consumer bumps both module
 requirements in one commit — wavescript (delete the strict-decode layer
 and the typed-read/enumeration/comment/render/write-cycle helpers; migrate
-the two `Len` sites), pgdesign (minimal-correct: drop the excluded-field
+the two `Len` sites), strictsql (minimal-correct: drop the excluded-field
 workaround and two-pass decode, strip `omitempty` options, mechanical
 conversions; validator untouched), howmuchleft (hard error on invalid
 config; `EnsureDefaults`; plain fields; the profile fix named in its
