@@ -222,9 +222,19 @@ type Document struct
 	method (*Document) Root() *Record
 	method (*Document) RoundTripVerifiedBytes(file string) ([]byte, error)
 	method (*Document) Set(path string, value any) error
+	method (*Document) SetBools(path string, values []bool) error
 	method (*Document) SetComment(path string, comment string) error
 	method (*Document) SetCreate(path string, value any) error
+	method (*Document) SetCreateBools(path string, values []bool) error
+	method (*Document) SetCreateFloats(path string, values []float64) error
+	method (*Document) SetCreateInlineTable(path string, table InlineTable) error
+	method (*Document) SetCreateInts(path string, values []int64) error
+	method (*Document) SetCreateStrings(path string, values []string) error
+	method (*Document) SetFloats(path string, values []float64) error
+	method (*Document) SetInlineTable(path string, table InlineTable) error
+	method (*Document) SetInts(path string, values []int64) error
 	method (*Document) SetLeadingComments(path string, comments []string) error
+	method (*Document) SetStrings(path string, values []string) error
 	method (*Document) Span() Span
 	method (*Document) Type() NodeType
 	method (*Document) Validate(spec *Spec) error
@@ -298,6 +308,17 @@ type FormatConfig struct
 	field LineWidth int
 
 type FormatOption func(*FormatConfig)
+
+type InlineTable struct
+	method (*InlineTable) Bool(key string, value bool) *InlineTable
+	method (*InlineTable) Bools(key string, values []bool) *InlineTable
+	method (*InlineTable) Float(key string, value float64) *InlineTable
+	method (*InlineTable) Floats(key string, values []float64) *InlineTable
+	method (*InlineTable) Int(key string, value int64) *InlineTable
+	method (*InlineTable) Ints(key string, values []int64) *InlineTable
+	method (*InlineTable) String(key string, value string) *InlineTable
+	method (*InlineTable) Strings(key string, values []string) *InlineTable
+	method (*InlineTable) Table(key string, table InlineTable) *InlineTable
 
 type InlineTableNode struct
 	method (*InlineTableNode) Children() []Node

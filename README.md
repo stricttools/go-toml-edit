@@ -150,6 +150,20 @@ there -- so a tool that writes back what it read touches nothing. When they
 differ, the value is written in the library's canonical spelling, and a
 container value (a map, a slice, a `[]Pair`) is replaced wholesale.
 
+Arrays and inline tables can also be written from statically typed values,
+for a caller that may not build a `[]any` or a `map[string]any` (strictgo
+code, for one). Each typed setter has a `SetCreate` form and shares `Set`'s
+refusals and equality rule:
+
+```go
+doc.SetStrings("server.hosts", []string{"a", "b"})
+doc.SetCreateInts("limits.ports", []int64{80, 443})
+
+var opclass tomledit.InlineTable
+opclass.String("id", "int4_ops").String("name", "text_pattern_ops")
+doc.SetCreateInlineTable("index.opclass", opclass) // keys in the order added
+```
+
 ### Structural editing
 
 ```go
