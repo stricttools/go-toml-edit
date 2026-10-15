@@ -2,6 +2,22 @@
 
 # Changelog
 
+## 0.6.0
+
+A hand-reading front end, `Reader`, over the read layer, and diagnostics that carry a fix and sort across files through `Collector`, so a program reads its own TOML formats with the same refusals a strict decode gives.
+
+<details>
+<summary>Context</summary>
+
+The family's command-model declaration files (strictcli's outline and strictgo's capabilities file) are read by hand with these, replacing a private reader each tool kept.
+
+</details>
+
+### Features
+
+- **Diagnostics carry a fix and sort across files.** `Error` gains a `Fix` field rendered after the message (`config.toml:4: server.port: is missing; write port = <integer>`) and renders `file:line` when no column is known; the new `KindInvalidValue` / `ErrInvalidValue` names a refused value; `Collector` gathers diagnostics from several files and returns one `*Errors` sorted by file, line, path, and message; `Errors.Diagnostics` lists an aggregate's diagnostics.
+- **Read a file by hand with `Reader`.** `Collector.Read` parses a file into a `Reader` over its top-level table; accessors (`Str`, `Integer`, `Boolean`, `Flag`, `StrList`, `NonEmpty`, `Tables`, `Sub`, and more) report a missing key at its table's line and a wrong type at the value's line, each with a fix saying what to write, and `Done` reports every unread key with the same kinds a strict decode uses.
+
 ## 0.5.1
 
 Deleting an entry of an array of tables now also removes the headers of the tables nested in that entry.
