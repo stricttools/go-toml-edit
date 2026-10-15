@@ -1,13 +1,13 @@
 {
   "_hash_version": 3,
   "en/design.md": {
-    "content": "adbabd0c0b0aff84fd0e28c786a96cac5e425fc3e7fc84c727c31630f71ea100",
-    "description": "20d4c1fc9ec0b2acdd9ac7e8606455719bb7ba423a4033a0c262da0aba3b8251"
+    "content": "fa1e096bc042f30b91466f0f63ae9e6d7565444c1eb71476f27d8433c4032bd7",
+    "description": "697f139c80efc988c6953f4aa6ab58dd02dfc2b49f5dc85819ca28bab21ee9e7"
   },
   "en/gen-index.md": {
     "content": "7c1f2befd8577e6ac15312ee2bd8261cb4242bd6ddfa1ffba2b88791a9575738",
-    "description": "8c031839fa8dddb0f018a21bed584eab65a9647c788224fcaa81cbb5d8c415f0",
-    "seed_hash": "8c031839fa8dddb0f018a21bed584eab65a9647c788224fcaa81cbb5d8c415f0"
+    "description": "69e69413de48e0d7504eeacd34c53d2faa939e8f310cae805f587ba12e8c3614",
+    "seed_hash": "69e69413de48e0d7504eeacd34c53d2faa939e8f310cae805f587ba12e8c3614"
   },
   "en/go-toml-edit.md": {
     "content": "9b74a2dc4d47520c618428af8f81752aae71ffb3531d692c039e373b0389824a",
@@ -17,8 +17,8 @@
   },
   "en/index.md": {
     "content": "3346be05d41edf2c55eb420ab4dec97cd98f2d1a32216cf68e5ea1b5e931733e",
-    "description": "6ad6b47413f86f2ee2bd1ac3dd1c03f1de9d183d061d4ca52377c9d614861c94",
-    "source_docstring": "a4911e37bb5fb1317b77baf77bf6ef3de183337c9619dcb4100c5221c75eeb63"
+    "description": "5618e075001084108d8253133df705887ac3e4525dbf516b8ec9a6c6953c06e3",
+    "source_docstring": "a38125e508befdd2dd2b8478000a0d5133c4f8bd12c45d14d4bf2a83a80457a9"
   },
   "en/scripts.md": {
     "content": "47623575447630cf9020f4ed84e74e7f200b8d64fe528a759d8e1e093290f909",
@@ -28,12 +28,11 @@
   },
   "en/tomlfile.md": {
     "content": "6939b18723bbff3ce3ba5b48d2a36d93a448a28f43be97e702c53ec365ebd7de",
-    "description": "63b5efddc958c1ee9da04331e387fd7507845ddd391f7e974773ac48ba520250",
-    "seed_hash": "63b5efddc958c1ee9da04331e387fd7507845ddd391f7e974773ac48ba520250",
+    "description": "dfc40bbbf01fe7f2d068ae9605834283fef0a7d1c4f6dbab521e029475c4beb1",
     "source_docstring": "1873f8892adc2ab9096cb6acdd072622fcc74fe64d4e2db60174effe7e85869d"
   },
   "en/usage-guide.md": {
-    "content": "0dfb8dea931ebb9cdaa1aca63df3a6a49ceb0f46c4da45ba8187503cb6413e83",
-    "description": "c114e8e047daae6704706bb49729c9e3dc33bb481de448ff100c94569d124c4c"
+    "content": "02cba11783e4ec563af52d33b714349b875a6ebf6b63920a6106f70d6c101e91",
+    "description": "988671dca7a93b3b3c0f41e60b658db8d96b85c7ca92b802020cecfb56150629"
   }
 }
