@@ -67,9 +67,9 @@ type Value struct {
 	records []*Record // ValueList written as an array of tables
 }
 
-// entryValue is the value one entry of a record holds. fallback is the line
+// valueOfEntry is the value one entry of a record holds. fallback is the line
 // used when the source carries none (a construct built by an edit).
-func entryValue(e Entry, fallback int) Value {
+func valueOfEntry(e Entry, fallback int) Value {
 	line := lineOf(e.KeySpan(), fallback)
 	switch e.kind {
 	case EntryRecord:
@@ -316,7 +316,7 @@ func (r *Reader) Peek(key string) (Value, bool) {
 	if !held {
 		return Value{}, false
 	}
-	return entryValue(e, r.line), true
+	return valueOfEntry(e, r.line), true
 }
 
 // Get reads a key: it becomes known, and when the table holds it its line is
@@ -540,7 +540,7 @@ func (r *Reader) Done() {
 		if r.known[e.Key()] {
 			continue
 		}
-		line := entryValue(e, r.line).line
+		line := valueOfEntry(e, r.line).line
 		path := r.KeyPath(e.Key())
 		switch e.kind {
 		case EntryRecord:
