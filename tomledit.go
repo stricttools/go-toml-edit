@@ -44,6 +44,18 @@
 // parsing reports its first failure alone, because a parse cannot continue past
 // a syntax error.
 //
+// # Reading by hand
+//
+// A file whose rules go beyond its shape is read key by key through a
+// [Reader] over one table, which records every problem in a [Collector]:
+// [Collector.Read] parses a file's bytes into a Reader over its top-level
+// table, the accessors ([Reader.Str], [Reader.Integer], [Reader.Flag],
+// [Reader.Tables], [Reader.Sub], and the rest) read keys and report a missing
+// key or a value of the wrong type with a fix saying what to write, and
+// [Reader.Done] reports every key nobody read as unknown, with the kinds a
+// strict decode uses. [Collector.Err] returns everything recorded, from every
+// file, sorted by file, line, path, and message.
+//
 // # Capabilities
 //
 //   - Lossless round-trip: parse and re-serialize without losing comments or

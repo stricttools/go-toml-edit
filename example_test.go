@@ -787,3 +787,39 @@ port = 443
 	// My App
 	// 443
 }
+
+func ExampleReader() {
+	// One collector gathers the problems of every file read through it.
+	var c tomledit.Collector
+	r := c.Read("tool.toml", []byte(`name = "fmt"
+mode = "fast"
+
+[[command]]
+help = "Formats files."
+retries = "three"
+`))
+	if r != nil {
+		name, _ := r.Str("name", true, `name = "<name>"`)
+		fmt.Println(name)
+		for _, cmd := range r.Tables("command") {
+			cmd.Str("name", true, `name = "<command name>"`)
+			cmd.Str("help", true, `help = "<one sentence>"`)
+			cmd.Integer("retries", false, "retries = <integer>")
+			cmd.Done() // every key nobody read is unknown
+		}
+		r.Done()
+	}
+
+	// Err sorts by file, line, path, and message.
+	var all *tomledit.Errors
+	if errors.As(c.Err(), &all) {
+		for _, d := range all.Diagnostics() {
+			fmt.Println(d)
+		}
+	}
+	// Output:
+	// fmt
+	// tool.toml:2: mode: is not a key of this table; remove it, or write one of command, name
+	// tool.toml:4: command[0].name: is missing; write name = "<command name>"
+	// tool.toml:6: command[0].retries: is a string, not an integer; write retries = <integer>
+}

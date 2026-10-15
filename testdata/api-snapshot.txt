@@ -25,6 +25,7 @@ const KindBadInput ErrorKind = 9
 const KindBadPath ErrorKind = 7
 const KindConflict ErrorKind = 10
 const KindInexact ErrorKind = 5
+const KindInvalidValue ErrorKind = 12
 const KindMissingKey ErrorKind = 3
 const KindNotFound ErrorKind = 6
 const KindRoundTrip ErrorKind = 11
@@ -57,6 +58,13 @@ const StringBasic StringStyle = 0
 const StringLiteral StringStyle = 1
 const StringMultiLineBasic StringStyle = 2
 const StringMultiLineLiteral StringStyle = 3
+const ValueBoolean ValueType = 2
+const ValueDateTime ValueType = 6
+const ValueFloat ValueType = 3
+const ValueInteger ValueType = 1
+const ValueList ValueType = 5
+const ValueString ValueType = 0
+const ValueTable ValueType = 4
 const WalkAll WalkMode = 1
 const WalkLeaves WalkMode = 0
 
@@ -64,6 +72,7 @@ var ErrBadInput error
 var ErrBadPath error
 var ErrConflict error
 var ErrInexact error
+var ErrInvalidValue error
 var ErrMissingKey error
 var ErrNotFound error
 var ErrRoundTrip error
@@ -85,6 +94,7 @@ func JoinPath(segs []PathSegment) string
 func Parse(src []byte) (*Document, error)
 func ParseFile(path string) (*Document, error)
 func ParsePath(path string) ([]PathSegment, error)
+func PathWithoutIndices(path string) string
 func QuoteKey(s string) string
 func QuoteString(s string) string
 func Unmarshal[T any](data []byte) (*T, error)
@@ -132,6 +142,13 @@ type Change struct
 
 type ChangeKind int
 	method (ChangeKind) String() string
+
+type Collector struct
+	method (*Collector) Add(err error)
+	method (*Collector) Err() error
+	method (*Collector) Errorf(file string, line int, path string, format string, args ...any)
+	method (*Collector) Len() int
+	method (*Collector) Read(file string, data []byte) *Reader
 
 type CommentNode struct
 	method (*CommentNode) Comment() string
@@ -238,6 +255,7 @@ type Error struct
 	field Value any
 	field Keys []string
 	field Offset int
+	field Fix string
 	method (*Error) Error() string
 	method (*Error) Is(target error) bool
 	method (*Error) Unwrap() error
@@ -246,6 +264,7 @@ type ErrorKind int
 	method (ErrorKind) String() string
 
 type Errors struct
+	method (*Errors) Diagnostics() []*Error
 	method (*Errors) Error() string
 	method (*Errors) Unwrap() []error
 
@@ -419,6 +438,33 @@ type Position struct
 	field Offset int
 	method (Position) IsValid() bool
 
+type Reader struct
+	method (*Reader) Boolean(key string, required bool) (bool, bool)
+	method (*Reader) Child(path string, v Value) *Reader
+	method (*Reader) Done()
+	method (*Reader) Errorf(key string, format string, args ...any)
+	method (*Reader) ErrorfAt(line int, path string, format string, args ...any)
+	method (*Reader) File() string
+	method (*Reader) Flag(key string) bool
+	method (*Reader) Get(key string) (Value, bool)
+	method (*Reader) Has(key string) bool
+	method (*Reader) Integer(key string, required bool, write string) (int64, bool)
+	method (*Reader) KeyPath(key string) string
+	method (*Reader) Keys() []string
+	method (*Reader) Line(key string) int
+	method (*Reader) Lines() map[string]int
+	method (*Reader) Missing(key string, write string)
+	method (*Reader) NonEmpty(key string, write string)
+	method (*Reader) Path() string
+	method (*Reader) Peek(key string) (Value, bool)
+	method (*Reader) PeekTrue(key string) bool
+	method (*Reader) Str(key string, required bool, write string) (string, bool)
+	method (*Reader) StrList(key string, required bool, write string) ([]string, bool)
+	method (*Reader) Sub(key string) *Reader
+	method (*Reader) TableLine() int
+	method (*Reader) Tables(key string) []*Reader
+	method (*Reader) WrongKind(key string, v Value, want string, write string)
+
 type Record struct
 	method (*Record) Entries() iter.Seq[Entry]
 	method (*Record) Get(key string) (Entry, bool)
@@ -480,5 +526,19 @@ type TableNode struct
 	method (*TableNode) Raw() []byte
 	method (*TableNode) Span() Span
 	method (*TableNode) Type() NodeType
+
+type Value struct
+	method (Value) Bool() bool
+	method (Value) Describe() string
+	method (Value) Float() float64
+	method (Value) Int() int64
+	method (Value) Line() int
+	method (Value) List() []Value
+	method (Value) Node() (Node, bool)
+	method (Value) Text() string
+	method (Value) Type() ValueType
+
+type ValueType int
+	method (ValueType) String() string
 
 type WalkMode int
