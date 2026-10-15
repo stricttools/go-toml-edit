@@ -1,12 +1,13 @@
-package tomledit
+package tomlfile
 
 import (
 	"errors"
 	"io/fs"
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
+
+	tomledit "github.com/stricttools/go-toml-edit"
 )
 
 // WriteFile's contract is a list of invariants, and each one has a test here:
@@ -16,9 +17,11 @@ import (
 // existing destination keeps its mode, and a new file is created as an ordinary
 // create would make it.
 //
-// The write path's three seams (renderForWrite, writeAll, renameOver) are what
+// The write path's three seams (renderVerified, writeAll, renameOver) are what
 // makes the failure invariants testable without a filesystem that fails on
-// demand. Each test restores what it replaced.
+// demand. Each test restores what it replaced. The round-trip check itself is
+// Document.RoundTripVerifiedBytes, and the root package's tests cover its
+// refusals; here a refusal is injected to show that nothing is written.
 
 const writeFileDoc = `# a document
 title = "example"
@@ -29,9 +32,9 @@ port = 8080
 `
 
 // parseForWrite parses the fixture and fails the test if it does not parse.
-func parseForWrite(t *testing.T) *Document {
+func parseForWrite(t *testing.T) *tomledit.Document {
 	t.Helper()
-	doc, err := Parse([]byte(writeFileDoc))
+	doc, err := tomledit.Parse([]byte(writeFileDoc))
 	if err != nil {
 		t.Fatalf("parse error: %v", err)
 	}
@@ -60,7 +63,7 @@ func TestWriteFile_WritesTheRenderedDocument(t *testing.T) {
 	path := filepath.Join(dir, "config.toml")
 	doc := parseForWrite(t)
 
-	if err := doc.WriteFile(path); err != nil {
+	if err := WriteFile(doc, path); err != nil {
 		t.Fatalf("WriteFile: %v", err)
 	}
 
@@ -94,7 +97,7 @@ func TestWriteFile_TempFileIsASiblingOfTheDestination(t *testing.T) {
 	}
 	defer func() { renameOver = original }()
 
-	if err := parseForWrite(t).WriteFile(path); err != nil {
+	if err := WriteFile(parseForWrite(t), path); err != nil {
 		t.Fatalf("WriteFile: %v", err)
 	}
 	if from == "" {
@@ -108,72 +111,28 @@ func TestWriteFile_TempFileIsASiblingOfTheDestination(t *testing.T) {
 	}
 }
 
-// Fails if WriteFile stops refusing bytes that do not parse. Nothing is
-// written, and the diagnostic is KindRoundTrip carrying the offset the bytes
-// stopped being TOML at, with the parse error still reachable.
-func TestWriteFile_RefusesRenderedBytesThatDoNotParse(t *testing.T) {
+// Fails if WriteFile stops refusing a document whose rendered bytes fail the
+// round-trip check: the check's diagnostic comes back unchanged, and nothing is
+// written -- not the destination, and no temporary file.
+func TestWriteFile_ARoundTripRefusalWritesNothing(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "config.toml")
 
-	original := renderForWrite
-	renderForWrite = func(*Document) []byte { return []byte("broken = \n") }
-	defer func() { renderForWrite = original }()
+	var named string
+	original := renderVerified
+	renderVerified = func(d *tomledit.Document, file string) ([]byte, error) {
+		named = file
+		_, err := tomledit.Parse([]byte("broken = \n"))
+		return nil, err
+	}
+	defer func() { renderVerified = original }()
 
-	err := parseForWrite(t).WriteFile(path)
-	if !errors.Is(err, ErrRoundTrip) {
-		t.Fatalf("WriteFile = %v, want %v", err, ErrRoundTrip)
+	err := WriteFile(parseForWrite(t), path)
+	if !errors.Is(err, tomledit.ErrSyntax) {
+		t.Fatalf("WriteFile = %v, want the injected refusal", err)
 	}
-	if !errors.Is(err, ErrSyntax) {
-		t.Errorf("the round-trip diagnostic does not report the syntax error under it: %v", err)
-	}
-	var diag *Error
-	if !errors.As(err, &diag) {
-		t.Fatalf("WriteFile = %v (%T), want a *Error", err, err)
-	}
-	if diag.Offset == 0 {
-		t.Errorf("the diagnostic carries offset 0, want where the bytes stopped parsing")
-	}
-	if diag.File != path {
-		t.Errorf("the diagnostic names file %q, want the destination %q", diag.File, path)
-	}
-	if diag.Path != "" {
-		t.Errorf("the diagnostic carries Path %q, but Path is a document path and this failure names no document position", diag.Path)
-	}
-	if rendered := diag.Error(); strings.Count(rendered, path) != 1 {
-		t.Errorf("the rendered diagnostic names the file %d times, want once: %q", strings.Count(rendered, path), rendered)
-	}
-	if names := dirEntries(t, dir); len(names) != 0 {
-		t.Errorf("the directory holds %v, want nothing written", names)
-	}
-}
-
-// Fails if WriteFile stops checking that the rendered bytes survive a
-// re-render, or stops reporting where the two disagree.
-func TestWriteFile_RefusesARenderThatDoesNotSurviveAReRender(t *testing.T) {
-	dir := t.TempDir()
-	path := filepath.Join(dir, "config.toml")
-
-	original := renderForWrite
-	calls := 0
-	renderForWrite = func(*Document) []byte {
-		calls++
-		if calls == 1 {
-			return []byte("a = 1\n")
-		}
-		return []byte("a = 2\n")
-	}
-	defer func() { renderForWrite = original }()
-
-	err := parseForWrite(t).WriteFile(path)
-	if !errors.Is(err, ErrRoundTrip) {
-		t.Fatalf("WriteFile = %v, want %v", err, ErrRoundTrip)
-	}
-	var diag *Error
-	if !errors.As(err, &diag) {
-		t.Fatalf("WriteFile = %v (%T), want a *Error", err, err)
-	}
-	if diag.Offset != 4 {
-		t.Errorf("the diagnostic reports the first divergence at byte %d, want 4", diag.Offset)
+	if named != path {
+		t.Errorf("the round-trip check was asked to name %q, want the destination %q", named, path)
 	}
 	if names := dirEntries(t, dir); len(names) != 0 {
 		t.Errorf("the directory holds %v, want nothing written", names)
@@ -195,7 +154,7 @@ func TestWriteFile_AWriteFailureLeavesNothingBehind(t *testing.T) {
 	writeAll = func(*os.File, []byte) error { return injected }
 	defer func() { writeAll = original }()
 
-	if err := parseForWrite(t).WriteFile(path); !errors.Is(err, injected) {
+	if err := WriteFile(parseForWrite(t), path); !errors.Is(err, injected) {
 		t.Fatalf("WriteFile = %v, want the injected failure", err)
 	}
 	got, err := os.ReadFile(path)
@@ -225,7 +184,7 @@ func TestWriteFile_ARenameFailureLeavesNothingBehind(t *testing.T) {
 	renameOver = func(string, string) error { return injected }
 	defer func() { renameOver = original }()
 
-	if err := parseForWrite(t).WriteFile(path); !errors.Is(err, injected) {
+	if err := WriteFile(parseForWrite(t), path); !errors.Is(err, injected) {
 		t.Fatalf("WriteFile = %v, want the injected failure", err)
 	}
 	got, err := os.ReadFile(path)
@@ -262,7 +221,7 @@ func TestWriteFile_AnExistingDestinationKeepsItsMode(t *testing.T) {
 				t.Fatalf("setting the destination's mode: %v", err)
 			}
 
-			if err := parseForWrite(t).WriteFile(path); err != nil {
+			if err := WriteFile(parseForWrite(t), path); err != nil {
 				t.Fatalf("WriteFile: %v", err)
 			}
 			info, err := os.Stat(path)
@@ -300,7 +259,7 @@ func TestWriteFile_ANewFileIsCreatedAsAnOrdinaryCreateWould(t *testing.T) {
 	}
 
 	path := filepath.Join(dir, "config.toml")
-	if err := parseForWrite(t).WriteFile(path); err != nil {
+	if err := WriteFile(parseForWrite(t), path); err != nil {
 		t.Fatalf("WriteFile: %v", err)
 	}
 	info, err := os.Stat(path)
@@ -318,11 +277,11 @@ func TestWriteFile_ANewFileIsCreatedAsAnOrdinaryCreateWould(t *testing.T) {
 func TestWriteFile_AFilesystemFailureIsTheUnderlyingError(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "no-such-dir", "config.toml")
 
-	err := parseForWrite(t).WriteFile(path)
+	err := WriteFile(parseForWrite(t), path)
 	if !errors.Is(err, fs.ErrNotExist) {
 		t.Fatalf("WriteFile = %v, want a not-exist error", err)
 	}
-	var diag *Error
+	var diag *tomledit.Error
 	if errors.As(err, &diag) {
 		t.Errorf("WriteFile reported a document diagnostic (%v) for a filesystem failure", diag)
 	}

@@ -4,8 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"math"
-	"os"
-	"path/filepath"
 	"time"
 
 	tomledit "github.com/stricttools/go-toml-edit"
@@ -233,40 +231,23 @@ port = 8080
 	// 8080
 }
 
-func ExampleParseFile() {
-	dir, err := os.MkdirTemp("", "tomledit-example")
+func ExampleParseWithFileName() {
+	doc, err := tomledit.ParseWithFileName([]byte("[server]\nport = \"8080\"\n"), "config.toml")
 	if err != nil {
 		panic(err)
 	}
-	defer os.RemoveAll(dir)
-	path := filepath.Join(dir, "config.toml")
-	if err := os.WriteFile(path, []byte("[server]\nport = \"8080\"\n"), 0o644); err != nil {
-		panic(err)
-	}
-
-	doc, err := tomledit.ParseFile(path)
-	if err != nil {
-		panic(err)
-	}
-	// The document remembers where it was read from, so a later diagnostic
-	// names the file, the line and the column.
+	// The document remembers the name it was parsed under, so a later
+	// diagnostic names the file, the line and the column.
 	_, err = doc.GetInt("server.port")
 	var diag *tomledit.Error
 	if errors.As(err, &diag) {
-		fmt.Println(filepath.Base(diag.File), diag.Pos.Line, diag.Pos.Column, diag.Path, diag.Expected, diag.Got)
+		fmt.Println(diag.File, diag.Pos.Line, diag.Pos.Column, diag.Path, diag.Expected, diag.Got)
 	}
 	// Output:
 	// config.toml 2 8 server.port integer string
 }
 
-func ExampleDocument_WriteFile() {
-	dir, err := os.MkdirTemp("", "tomledit-example")
-	if err != nil {
-		panic(err)
-	}
-	defer os.RemoveAll(dir)
-	path := filepath.Join(dir, "config.toml")
-
+func ExampleDocument_RoundTripVerifiedBytes() {
 	doc, err := tomledit.Parse([]byte("# kept\n[server]\nport = 8080\n"))
 	if err != nil {
 		panic(err)
@@ -274,17 +255,13 @@ func ExampleDocument_WriteFile() {
 	if err := doc.Set("server.port", 9090); err != nil {
 		panic(err)
 	}
-	// The bytes are checked against a re-parse before anything is written,
-	// and the file is replaced in one step.
-	if err := doc.WriteFile(path); err != nil {
-		panic(err)
-	}
-
-	written, err := os.ReadFile(path)
+	// The bytes are handed out only after they survive a re-parse and a
+	// re-render.
+	out, err := doc.RoundTripVerifiedBytes("config.toml")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Print(string(written))
+	fmt.Print(string(out))
 	// Output:
 	// # kept
 	// [server]

@@ -73,8 +73,8 @@ type Document struct {
 	nodeBase
 	children []Node
 
-	// file is the path the document was read from (ParseFile), or "" when it
-	// was parsed from bytes. Every diagnostic the document produces names it.
+	// file is the name the document was parsed under (ParseWithFileName), or
+	// "" when it was parsed with Parse. Every diagnostic the document produces names it.
 	file string
 
 	// layer is the read-layer folded from the document as it stood at

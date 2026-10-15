@@ -2,37 +2,31 @@ package tomledit
 
 import (
 	"errors"
-	"io/fs"
-	"os"
-	"path/filepath"
 	"strings"
 	"testing"
 )
 
-// ParseFile reads a document from disk and the document remembers where it came
-// from, so that every diagnostic it produces afterwards names the file.
+// A document parsed with ParseWithFileName remembers the name it was given, so
+// that every diagnostic it produces afterwards names the file. Reading the file
+// itself is the tomlfile subpackage's, and its tests cover it.
 
-// writeTOML writes content to a file in a temporary directory and returns its
-// path.
-func writeTOML(t *testing.T, name, content string) string {
+// parseWithFileName parses content under the file name file and fails the test
+// if it does not parse.
+func parseWithFileName(t *testing.T, file, content string) *Document {
 	t.Helper()
-	path := filepath.Join(t.TempDir(), name)
-	if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
-		t.Fatalf("writing %s: %v", path, err)
+	doc, err := ParseWithFileName([]byte(content), file)
+	if err != nil {
+		t.Fatalf("ParseWithFileName(%s): %v", file, err)
 	}
-	return path
+	return doc
 }
 
-// Fails if ParseFile stops producing the same document Parse produces for the
-// same bytes.
-func TestParseFile(t *testing.T) {
+// Fails if ParseWithFileName stops producing the same document Parse produces
+// for the same bytes.
+func TestParseWithFileName(t *testing.T) {
 	const content = "# a config\ntitle = \"hello\"\n\n[server]\nhost = \"localhost\"\n"
-	path := writeTOML(t, "config.toml", content)
+	doc := parseWithFileName(t, "configs/config.toml", content)
 
-	doc, err := ParseFile(path)
-	if err != nil {
-		t.Fatalf("ParseFile failed: %v", err)
-	}
 	if got := string(doc.Bytes()); got != content {
 		t.Errorf("round-trip = %q, want %q", got, content)
 	}
@@ -41,28 +35,10 @@ func TestParseFile(t *testing.T) {
 	}
 }
 
-// Fails if an unreadable file stops being reported as the underlying read
-// error -- nothing was parsed, so there is nothing to diagnose.
-func TestParseFileMissing(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "absent.toml")
-	doc, err := ParseFile(path)
-	if err == nil {
-		t.Fatalf("ParseFile on a missing file returned %v, want an error", doc)
-	}
-	if !errors.Is(err, fs.ErrNotExist) {
-		t.Errorf("errors.Is(err, fs.ErrNotExist) = false, want true (err: %v)", err)
-	}
-	var diag *Error
-	if errors.As(err, &diag) {
-		t.Errorf("a read failure must not be reported as a diagnostic, got %v", diag)
-	}
-}
-
-// Fails if a parse failure from ParseFile stops naming the file it came from.
-func TestParseFileSyntaxErrorNamesTheFile(t *testing.T) {
-	path := writeTOML(t, "broken.toml", "a = 1\na = 2\n")
-
-	_, err := ParseFile(path)
+// Fails if a parse failure from ParseWithFileName stops naming the file.
+func TestParseWithFileNameSyntaxErrorNamesTheFile(t *testing.T) {
+	const path = "configs/broken.toml"
+	_, err := ParseWithFileName([]byte("a = 1\na = 2\n"), path)
 	if err == nil {
 		t.Fatalf("expected a parse error")
 	}
@@ -79,10 +55,10 @@ func TestParseFileSyntaxErrorNamesTheFile(t *testing.T) {
 }
 
 // Fails if a later diagnostic -- from access, editing or commenting -- stops
-// naming the file the document was read from.
-func TestParseFileDiagnosticsNameTheFile(t *testing.T) {
+// naming the file the document was parsed under.
+func TestParseWithFileNameDiagnosticsNameTheFile(t *testing.T) {
 	const content = "title = \"hello\"\npoint = { x = 1 }\n\n[server]\nhost = \"localhost\"\n"
-	path := writeTOML(t, "config.toml", content)
+	const path = "configs/config.toml"
 
 	tests := []struct {
 		name string
@@ -102,11 +78,8 @@ func TestParseFileDiagnosticsNameTheFile(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			doc, err := ParseFile(path)
-			if err != nil {
-				t.Fatalf("ParseFile failed: %v", err)
-			}
-			err = tt.run(doc)
+			doc := parseWithFileName(t, path, content)
+			err := tt.run(doc)
 			if err == nil {
 				t.Fatalf("expected an error")
 			}
@@ -147,14 +120,9 @@ func TestParseCarriesNoFile(t *testing.T) {
 // A node reaches its document through the parent links the structure funnel
 // maintains, which is how a decode scoped to one construct still knows where
 // the construct was read from.
-func TestParseFileDecodeNodeDiagnosticsNameTheFile(t *testing.T) {
-	const content = "[server]\nport = \"eighty\"\n"
-	path := writeTOML(t, "config.toml", content)
-
-	doc, err := ParseFile(path)
-	if err != nil {
-		t.Fatalf("ParseFile failed: %v", err)
-	}
+func TestParseWithFileNameDecodeNodeDiagnosticsNameTheFile(t *testing.T) {
+	const path = "configs/config.toml"
+	doc := parseWithFileName(t, path, "[server]\nport = \"eighty\"\n")
 	node, ok := doc.Lookup("server")
 	if !ok {
 		t.Fatal("server not found")
@@ -163,7 +131,7 @@ func TestParseFileDecodeNodeDiagnosticsNameTheFile(t *testing.T) {
 	type target struct {
 		Port int `toml:"port"`
 	}
-	_, err = DecodeNode[target](node)
+	_, err := DecodeNode[target](node)
 	if err == nil {
 		t.Fatal("expected an error decoding a string into an int field")
 	}

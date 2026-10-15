@@ -73,5 +73,6 @@ This project uses [rlsbl](https://github.com/stricttools/rlsbl) for release orch
 - Comments are first-class: any operation that silently loses comments is a bug
 - Round-trip fidelity: `Parse(x).Bytes()` must equal `x` for any valid TOML input
 - No runtime dependencies: the non-test sources import the standard library only, asserted by a test
+- The root package `tomledit` is pure: it computes only over the bytes and documents it is handed, asserted by a test over its imports and clock calls. Everything that touches the operating system (file reads, the temporary-file-and-rename write, random temporary-file names) is in the `tomlfile` subpackage
 - BurntSushi/toml is a dev dependency for benchmarks only, not a runtime dependency
 - toml-test/v2 is a test dependency for compliance verification only

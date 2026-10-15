@@ -123,7 +123,7 @@ Everything that answers with a `Node` (`Resolve`, `Lookup`, the getters, the edi
 
 Every failure that depends on the document -- its syntax, its keys, its values, the path a caller asked for -- is an `*Error`: a kind, a document path, a position (line, column and byte offset), a span, a message, and kind-specific detail such as expected/got, the offending value, or an unknown table's direct-child inventory. A failure that depends only on the consumer's own Go code -- a target of the wrong shape, an unknown struct-tag option, a descriptor built with a missing sub-descriptor -- is a plain error instead, because there is no document position to point at.
 
-`Error()` renders in the compiler convention: the non-empty parts of `[location, path, message]` joined by `": "`, where location is `file:LINE:COL`, `LINE:COL`, the bare `file`, or absent. A document loaded with `ParseFile` remembers its filename, and every later diagnostic from that document carries it.
+`Error()` renders in the compiler convention: the non-empty parts of `[location, path, message]` joined by `": "`, where location is `file:LINE:COL`, `LINE:COL`, the bare `file`, or absent. A document loaded with `tomlfile.ParseFile`, or parsed with `ParseWithFileName`, remembers its filename, and every later diagnostic from that document carries it.
 
 Matching is through the standard idioms: `errors.Is` against the kind sentinels (`ErrSyntax`, `ErrNotFound`, `ErrTypeMismatch`, ...), and `errors.As` for structured access. A decode collects every independent violation and returns them as an `*Errors` aggregate, which renders as its first diagnostic and exposes the whole list through `Unwrap() []error`. Parsing stays first-error-only: a parse cannot meaningfully continue past a syntax error.
 

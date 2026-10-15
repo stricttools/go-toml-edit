@@ -261,12 +261,9 @@ func TestResolve_UnfoldableDocumentIsRefused(t *testing.T) {
 // Fails if a resolution diagnostic stops naming the file the document came
 // from, or the path the caller asked for.
 func TestResolve_DiagnosticsNameFileAndPath(t *testing.T) {
-	path := writeTOML(t, "config.toml", "[[coll]]\nx = 1\n")
-	doc, err := ParseFile(path)
-	if err != nil {
-		t.Fatalf("ParseFile: %v", err)
-	}
-	_, err = doc.Resolve("coll")
+	path := "configs/config.toml"
+	doc := parseWithFileName(t, path, "[[coll]]\nx = 1\n")
+	_, err := doc.Resolve("coll")
 	var diag *Error
 	if !errors.As(err, &diag) {
 		t.Fatalf("Resolve = %v, want an *Error", err)

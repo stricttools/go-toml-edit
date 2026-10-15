@@ -15,13 +15,16 @@ go-toml-edit is a Go library for parsing, editing, and serializing TOML document
 go get github.com/stricttools/go-toml-edit
 ```
 
-All public types and functions live in the `tomledit` package. The package name does not match the last element of the module path, so import it under its name:
+The public types and functions live in the `tomledit` package, and the file reads and writes in its `tomlfile` subpackage. The root package name does not match the last element of the module path, so import it under its name:
 
 ```go
-import tomledit "github.com/stricttools/go-toml-edit"
+import (
+    tomledit "github.com/stricttools/go-toml-edit"
+    "github.com/stricttools/go-toml-edit/tomlfile"
+)
 ```
 
-The package has no runtime dependencies: it imports the standard library and nothing else.
+The module has no runtime dependencies: it imports the standard library and nothing else. The `tomledit` package touches no operating system -- it computes only over the bytes and documents it is handed -- so a program that reads and writes its files some other way imports `tomledit` alone.
 
 ## Two surfaces, two questions
 
@@ -66,16 +69,16 @@ See [Diagnostics](#diagnostics) for the full contract.
 
 ### From a file
 
-`tomledit.ParseFile` reads and parses a file, and the document remembers the filename: every diagnostic it later produces -- from parsing, decoding, access or editing -- names the file it came from.
+`tomlfile.ParseFile` reads and parses a file, and the document remembers the filename: every diagnostic it later produces -- from parsing, decoding, access or editing -- names the file it came from.
 
 ```go
-doc, err := tomledit.ParseFile("config.toml")
+doc, err := tomlfile.ParseFile("config.toml")
 if err != nil {
     log.Fatal(err)
 }
 ```
 
-A file that cannot be read is reported as the underlying `*fs.PathError`, matchable with `errors.Is` against `fs.ErrNotExist` and the rest -- not as an `*Error`, because nothing was parsed and so there is nothing to diagnose. Reading the bytes yourself and calling `Parse` is still available; the document then carries no filename.
+A file that cannot be read is reported as the underlying `*fs.PathError`, matchable with `errors.Is` against `fs.ErrNotExist` and the rest -- not as an `*Error`, because nothing was parsed and so there is nothing to diagnose. A program that reads the bytes itself calls `tomledit.ParseWithFileName(src, "config.toml")` for the same document and the same diagnostics, or `Parse`, after which the document carries no filename.
 
 ## Querying values
 
@@ -511,10 +514,10 @@ output := doc.Bytes()
 ### WriteFile -- atomic, round-trip checked
 
 ```go
-err := doc.WriteFile("config.toml")
+err := tomlfile.WriteFile(doc, "config.toml")
 ```
 
-`WriteFile` renders the document, proves the rendered bytes parse *and* that re-rendering that parse reproduces them byte for byte, then writes them to a temporary file in the destination's own directory and renames it over the destination in one step. A failure anywhere before the rename leaves the destination exactly as it was and no temporary file behind.
+`tomlfile.WriteFile` takes the bytes `doc.RoundTripVerifiedBytes("config.toml")` returns -- the rendered document, proved to parse *and* to reproduce itself byte for byte when that parse is re-rendered -- then writes them to a temporary file in the destination's own directory and renames it over the destination in one step. A failure anywhere before the rename leaves the destination exactly as it was and no temporary file behind. A program that writes its files some other way calls `RoundTripVerifiedBytes` itself and writes what it returns.
 
 A round-trip failure is an `*Error` of kind `KindRoundTrip` whose `Offset` names the byte at which the two renderings disagree -- or, when the rendered bytes do not parse at all, where they stopped being TOML, with the parse error wrapped. A filesystem failure is reported as the underlying `*fs.PathError`. An existing destination keeps its file mode; a new file is created with mode 0o644 before umask.
 
@@ -744,7 +747,7 @@ type Error struct {
 }
 ```
 
-It renders in the compiler convention -- the non-empty parts of `[location, path, message]` joined by `": "` -- so a diagnostic from a `ParseFile` document reads `config.toml:12:7: server.port: expected integer, got string`, and one from an in-memory parse drops the filename.
+It renders in the compiler convention -- the non-empty parts of `[location, path, message]` joined by `": "` -- so a diagnostic from a document read with `tomlfile.ParseFile` reads `config.toml:12:7: server.port: expected integer, got string`, and one from an in-memory parse drops the filename.
 
 Match a kind with `errors.Is` against a sentinel, and read the structure with `errors.As`:
 
@@ -772,7 +775,7 @@ The kinds and their sentinels:
 | `KindWrongContainer` | `ErrWrongContainer` | a path step, or the operation itself, is structurally inapplicable |
 | `KindBadInput` | `ErrBadInput` | an invalid input to an editing operation |
 | `KindConflict` | `ErrConflict` | an edit that would produce an invalid document |
-| `KindRoundTrip` | `ErrRoundTrip` | `WriteFile`'s rendered bytes did not survive a re-parse |
+| `KindRoundTrip` | `ErrRoundTrip` | `RoundTripVerifiedBytes`'s rendered bytes did not survive a re-parse |
 
 A decode returns its violations as an `*Errors` aggregate. It renders as its first diagnostic, so a single-error call site reads like a single error; the whole list is reachable through `errors.As` and `Unwrap() []error`, in document order. `errors.Is` against a kind sentinel matches when any contained diagnostic carries that kind.
 
@@ -883,10 +886,11 @@ import (
     "log"
 
     tomledit "github.com/stricttools/go-toml-edit"
+    "github.com/stricttools/go-toml-edit/tomlfile"
 )
 
 func main() {
-    doc, err := tomledit.ParseFile("config.toml")
+    doc, err := tomlfile.ParseFile("config.toml")
     if err != nil {
         log.Fatal(err)
     }
@@ -922,7 +926,7 @@ func main() {
     }
 
     // Write back atomically, after checking the bytes survive a round trip
-    if err := doc.WriteFile("config.toml"); err != nil {
+    if err := tomlfile.WriteFile(doc, "config.toml"); err != nil {
         log.Fatal(err)
     }
 }

@@ -1,22 +1,44 @@
-package tomledit
+// Package tomlfile reads TOML files into tomledit documents and writes
+// documents back to files. It holds every operation of go-toml-edit that
+// touches the operating system: the root package tomledit computes only over
+// the bytes and documents it is handed, and this package adds the file reads,
+// the temporary file, the rename, and the random temporary-file names around
+// it.
+package tomlfile
 
 import (
-	"bytes"
 	"errors"
 	"io/fs"
 	"math/rand/v2"
 	"os"
 	"path/filepath"
 	"strconv"
+
+	tomledit "github.com/stricttools/go-toml-edit"
 )
+
+// ParseFile reads the file at path and parses it. The document remembers the
+// filename, so every diagnostic it later produces -- from parsing, access or
+// editing -- names the file it came from.
+//
+// A file that cannot be read is reported as the underlying read error (an
+// *fs.PathError, matchable with errors.Is against fs.ErrNotExist and the
+// rest), not as a *tomledit.Error: nothing was parsed, so there is nothing to
+// diagnose.
+func ParseFile(path string) (*tomledit.Document, error) {
+	src, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	return tomledit.ParseWithFileName(src, path)
+}
 
 // The write path's three seams: rendering, writing and renaming. They are
 // variables so that the invariant tests can inject a failure at each step
-// without a filesystem that fails on demand, and so that the round-trip check
-// can be shown to catch a render that does not survive one. Nothing outside a
-// test reassigns them.
+// without a filesystem that fails on demand. Nothing outside a test reassigns
+// them.
 var (
-	renderForWrite = func(d *Document) []byte { return d.Bytes() }
+	renderVerified = func(d *tomledit.Document, path string) ([]byte, error) { return d.RoundTripVerifiedBytes(path) }
 	writeAll       = func(f *os.File, data []byte) error { _, err := f.Write(data); return err }
 	renameOver     = os.Rename
 )
@@ -31,25 +53,24 @@ var (
 // and no temporary file behind. (A machine that loses power mid-write is the
 // kernel's business, not this function's.)
 //
-// The round trip is checked before anything is written: the rendered bytes must
-// parse, and re-rendering that parse must reproduce them byte for byte. A
-// failure is an *Error of kind KindRoundTrip whose Offset field carries the
-// byte at which the two disagree -- or, when the rendered bytes do not parse at
-// all, the offset at which they stopped being TOML, with the parse error
-// wrapped so errors.Is still reaches it. Nothing is written in either case.
+// The round trip is checked before anything is written, by
+// Document.RoundTripVerifiedBytes: the rendered bytes must parse, and
+// re-rendering that parse must reproduce them byte for byte. A failure is the
+// *tomledit.Error of kind KindRoundTrip that method reports, naming path.
+// Nothing is written in that case.
 //
 // The destination's file mode is preserved when it already exists. A new file
 // is created with mode 0o644, as an ordinary create would, so the process umask
 // applies to it.
 //
 // A filesystem failure is reported as the underlying error -- an *fs.PathError,
-// matchable with errors.Is -- and not as an *Error, on the same terms as
-// ParseFile: nothing about the document is wrong, so there is nothing to
+// matchable with errors.Is -- and not as a *tomledit.Error, on the same terms
+// as ParseFile: nothing about the document is wrong, so there is nothing to
 // diagnose about it.
-func (d *Document) WriteFile(path string) error {
-	out := renderForWrite(d)
-	if err := verifyRoundTrip(out); err != nil {
-		return err.inFile(path)
+func WriteFile(d *tomledit.Document, path string) error {
+	out, err := renderVerified(d, path)
+	if err != nil {
+		return err
 	}
 
 	perm, existed, err := destinationMode(path)
@@ -92,38 +113,6 @@ func (d *Document) WriteFile(path string) error {
 		return err
 	}
 	return nil
-}
-
-// verifyRoundTrip reports whether rendered bytes survive a parse and a
-// re-render, as the diagnostic they fail with.
-func verifyRoundTrip(out []byte) *Error {
-	back, err := Parse(out)
-	if err != nil {
-		diag := asDiagnostic(err)
-		return newError(KindRoundTrip, "the rendered document does not parse: %s", diag.Message).
-			at(diag.Pos).atOffset(diag.Pos.Offset).inSource(out).wrapping(err)
-	}
-	again := renderForWrite(back)
-	if bytes.Equal(out, again) {
-		return nil
-	}
-	off := firstDivergence(out, again)
-	return newError(KindRoundTrip,
-		"the rendered document does not survive a re-render: %d bytes written, %d bytes read back, first differing at byte %d",
-		len(out), len(again), off).atOffset(off)
-}
-
-// firstDivergence returns the index of the first byte at which a and b differ,
-// which for two byte slices where one is a prefix of the other is the length of
-// the shorter.
-func firstDivergence(a, b []byte) int {
-	n := min(len(a), len(b))
-	for i := 0; i < n; i++ {
-		if a[i] != b[i] {
-			return i
-		}
-	}
-	return n
 }
 
 // destinationMode reports the mode the written file must end up with, and

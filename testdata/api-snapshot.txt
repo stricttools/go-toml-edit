@@ -92,8 +92,8 @@ func FieldAny() Field
 func FormatFloat(f float64) string
 func JoinPath(segs []PathSegment) string
 func Parse(src []byte) (*Document, error)
-func ParseFile(path string) (*Document, error)
 func ParsePath(path string) ([]PathSegment, error)
+func ParseWithFileName(src []byte, file string) (*Document, error)
 func PathWithoutIndices(path string) string
 func QuoteKey(s string) string
 func QuoteString(s string) string
@@ -220,6 +220,7 @@ type Document struct
 	method (*Document) RenameKey(path string, newKey string) error
 	method (*Document) Resolve(path string) (Node, error)
 	method (*Document) Root() *Record
+	method (*Document) RoundTripVerifiedBytes(file string) ([]byte, error)
 	method (*Document) Set(path string, value any) error
 	method (*Document) SetComment(path string, comment string) error
 	method (*Document) SetCreate(path string, value any) error
@@ -228,7 +229,6 @@ type Document struct
 	method (*Document) Type() NodeType
 	method (*Document) Validate(spec *Spec) error
 	method (*Document) Walk(fn func(path string, node Node) error, mode WalkMode) error
-	method (*Document) WriteFile(path string) error
 
 type Entry struct
 	method (Entry) Key() string

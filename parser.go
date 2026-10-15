@@ -3,7 +3,6 @@ package tomledit
 import (
 	"fmt"
 	"math"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -24,20 +23,13 @@ func Parse(src []byte) (*Document, error) {
 	return parseSource(src, "")
 }
 
-// ParseFile reads the file at path and parses it. The document remembers the
-// filename, so every diagnostic it later produces -- from parsing, access or
-// editing -- names the file it came from.
-//
-// A file that cannot be read is reported as the underlying read error (an
-// *fs.PathError, matchable with errors.Is against fs.ErrNotExist and the
-// rest), not as an *Error: nothing was parsed, so there is nothing to
-// diagnose.
-func ParseFile(path string) (*Document, error) {
-	src, err := os.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-	return parseSource(src, path)
+// ParseWithFileName parses src as Parse does, and records file as the
+// document's origin, so every diagnostic it later produces -- from parsing,
+// access or editing -- names that file. It reads nothing: file is only the name
+// the diagnostics carry. The tomlfile subpackage reads a file and parses it
+// through this function.
+func ParseWithFileName(src []byte, file string) (*Document, error) {
+	return parseSource(src, file)
 }
 
 // parseSource lexes and parses src, recording file as the document's origin

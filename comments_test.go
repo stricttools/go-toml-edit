@@ -386,19 +386,16 @@ func TestComments_GetterNavigationErrorsMatchTheSetters(t *testing.T) {
 	}
 }
 
-// A document read from disk names the file on the getters' diagnostics, just as
-// it does on the setters'.
+// A document parsed under a file name names the file on the getters'
+// diagnostics, just as it does on the setters'.
 //
 // Fails if the getters ever return a diagnostic that does not carry the
 // document's origin.
 func TestComments_GetterDiagnosticsNameTheFile(t *testing.T) {
-	path := writeTOML(t, "config.toml", "[server]\nhost = \"localhost\"\n")
-	doc, err := ParseFile(path)
-	if err != nil {
-		t.Fatalf("ParseFile: %v", err)
-	}
+	path := "configs/config.toml"
+	doc := parseWithFileName(t, path, "[server]\nhost = \"localhost\"\n")
 
-	// Reading what is there works the same through a file-backed document.
+	// Reading what is there works the same through a named document.
 	if err := doc.SetComment("server.host", "bind address"); err != nil {
 		t.Fatalf("SetComment: %v", err)
 	}

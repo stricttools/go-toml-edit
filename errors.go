@@ -124,8 +124,8 @@ var (
 // extent of the construct it concerns, which for the parse stage means the
 // parser's token diagnostics -- the lexer's and the duplicate-definition
 // tracker's carry the zero Span. Path is filled for path-addressed
-// operations, File whenever the document's origin is known (see ParseFile and
-// Collector.Read), and the remaining fields by the kinds documented on
+// operations, File whenever the document's origin is known (see ParseWithFileName
+// and Collector.Read), and the remaining fields by the kinds documented on
 // ErrorKind. A diagnostic reported through a Reader carries a line without a
 // column (Pos.Column is 0), and Fix when the reporting site knows what to write
 // instead. An unpopulated field carries its zero value.

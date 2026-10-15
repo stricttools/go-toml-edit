@@ -68,7 +68,9 @@
 //     [DecodeNode] and [DecodeOver], or against a hand-built descriptor through
 //     [Document.Validate] and [Document.DecodeSpec].
 //   - Diff and merge: compare two documents, or merge one into another.
-//   - Files: [ParseFile] remembers the filename for later diagnostics, and
-//     [Document.WriteFile] writes atomically after checking that the rendered
-//     bytes survive a round trip.
+//   - File names and writes: [ParseWithFileName] records a filename for later
+//     diagnostics, and [Document.RoundTripVerifiedBytes] renders only bytes
+//     that survive a round trip. The package reads and writes no file itself:
+//     the tomlfile subpackage reads a file and parses it, and writes a document
+//     atomically through that check.
 package tomledit

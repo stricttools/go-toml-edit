@@ -395,12 +395,9 @@ func TestCollectorAddsDecodeDiagnostics(t *testing.T) {
 		Name string `toml:"name"`
 		Port int    `toml:"port,required"`
 	}
-	path := writeTOML(t, "decode.toml", "name = \"x\"\n\n[extra]\nk = 1\n")
-	doc, err := ParseFile(path)
-	if err != nil {
-		t.Fatalf("ParseFile: %v", err)
-	}
-	_, err = Decode[config](doc)
+	path := "configs/decode.toml"
+	doc := parseWithFileName(t, path, "name = \"x\"\n\n[extra]\nk = 1\n")
+	_, err := Decode[config](doc)
 	c := &Collector{}
 	c.Add(err)
 	c.Add(nil)
