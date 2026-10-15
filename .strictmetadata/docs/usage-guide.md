@@ -33,7 +33,7 @@ A parsed document is readable through two surfaces, and which one to use follows
 - The **syntactic** surface is the AST -- `Walk`, `Resolve` and the concrete node types. It answers what the file *contains*, in the form it was written: spellings, quoting styles, integer bases, comments, blank lines and the source span of every construct.
 - The **logical** surface is the read-layer -- `doc.Root()`, `Record` and `Entry`. It answers what the document *means*, with the spellings folded away: a dotted key, a `[header]` table and an inline table are indistinguishable through it.
 
-Read values through the read-layer or the typed accessors; use the AST to edit, or to inspect how something was written.
+Read values through the read-layer or the typed accessors, and use the AST to inspect how something was written. Edits go through neither surface: they are `Document` methods addressed by path (`Set`, `SetCreate`, `Delete`, `RenameKey`, the structural operations, and the comment setters), described below.
 
 ## Parsing TOML
 
