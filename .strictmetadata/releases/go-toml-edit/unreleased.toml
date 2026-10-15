@@ -1,11 +1,11 @@
 # The next release of go-toml-edit. Fill in bump and description, then run `rlsbl release run --watch`.
 format_version = 2
 # How the release moves the version: patch, minor, major, or infra (moved as a patch, recorded as infra).
-bump = ""
+bump = "minor"
 # What this release is, in a sentence or two. Required.
-description = ""
+description = "The root package computes only over the values it is handed: reading and writing files moved to the new `tomlfile` subpackage, so strict programs and strict libraries can parse and edit TOML."
 # Why these changes were made. Optional.
-context = ""
+context = "strictgo admits a module whose importable packages perform no effects as a pure module; the file functions made go-toml-edit a host module, which strict code may not import."
 # The targets released, and the ones left out; between them they name every target of the releasable's members.
 include = ["go"]
 exclude = []
