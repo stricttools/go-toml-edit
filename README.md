@@ -64,7 +64,9 @@ go get github.com/stricttools/go-toml-edit
 **No runtime dependencies.** The package imports the standard library and
 nothing else; the module's BurntSushi/toml and toml-test requirements are
 test-only (the benchmark comparison and the compliance corpus). A test asserts
-this over the non-test sources.
+this over the non-test sources, and another asserts that the `tomledit` package
+touches no operating system: file reads and writes are the `tomlfile`
+subpackage's.
 
 ## Two surfaces, two questions
 
@@ -325,13 +327,19 @@ needed after editing.
 ### Files
 
 ```go
-doc, err := tomledit.ParseFile("config.toml") // remembers the filename
-err = doc.WriteFile("config.toml")            // atomic, round-trip checked
+import "github.com/stricttools/go-toml-edit/tomlfile"
+
+doc, err := tomlfile.ParseFile("config.toml") // remembers the filename
+err = tomlfile.WriteFile(doc, "config.toml")  // atomic, round-trip checked
 ```
 
-A document loaded with `ParseFile` names the file in every diagnostic it later
-produces. `WriteFile` proves the rendered bytes re-parse to themselves before
-replacing the destination in one step.
+The `tomledit` package reads and writes no file: it computes only over the
+bytes and documents it is handed. File access is the `tomlfile` subpackage's.
+A document loaded with `tomlfile.ParseFile` names the file in every diagnostic
+it later produces; `tomledit.ParseWithFileName` does the same for bytes the
+caller read. `tomlfile.WriteFile` writes the bytes
+`Document.RoundTripVerifiedBytes` returns -- bytes proved to re-parse to
+themselves -- and replaces the destination in one step.
 
 ### Diagnostics
 
