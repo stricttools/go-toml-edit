@@ -3,23 +3,23 @@
 ## Context
 
 Items deliberately NOT pursued during the redesign campaign recorded in
-docs/design-record.md. Each was considered and deferred (or rejected, where
-marked) with the reasoning below. None blocks the campaign; each can be
-picked up independently after the campaign's release ships.
+todo/.done/design-record.md. Each was considered and deferred (or rejected,
+where marked) with the reasoning below. The campaign shipped in 0.4.0; each
+item can be picked up independently.
 
 ## Deferred items
 
-- **Real struct-to-TOML Marshal.** Struct tags, nested sections,
+- **Struct-to-TOML Marshal.** Struct tags, nested sections,
   caller-controlled key ordering, comment emission. The map-only Marshal
   was deleted (zero callers; forced alphabetization contradicted the one
-  plausible use). A fleet consumer's large hand-built document exporter
-  could shrink substantially onto a real Marshal. Effort: the largest
+  plausible use). A consumer's large hand-built document exporter
+  could shrink substantially onto a struct Marshal. Effort: the largest
   greenfield design here — ordering and comment-emission APIs are open
   design space.
 - **Remaining structural manipulation.** Node moves across containers,
   positional insertion, table-to-inline (and reverse) conversion. Deferred
   for zero demonstrated demand; conversion semantics (what happens to
-  comments) are real design questions. Effort: medium per operation.
+  comments) are open design questions. Effort: medium per operation.
 - **Declarative key-ordering convenience.** A name-list ordering operation
   (order these keys; a mandatory policy for unlisted ones). Deferred by
   ruling, and it must be designed only AFTER the structural comment model
@@ -30,13 +30,13 @@ picked up independently after the campaign's release ships.
   children plus a trailing-trivia slot; per-comment attachment direction
   becomes parser-set, correctable data (blank-line adjacency as evidence).
   Makes comment-separation bugs unrepresentable instead of tested-against.
-  This is the ratified direction if comment-placement demand materializes;
+  This is the ruled direction if comment-placement demand materializes;
   its one blind spot (trailing explanation comments) is what the
   attachment-direction data solves. Effort: large — a node-model change
   with fanout into parser, render, and every structural test.
 - **External node construction with spelling control.** The pre-built-Node
   input branch of Set/SetCreate was deleted in the wave with no
-  replacement, so there is currently no spelling for writing a
+  replacement, so there is no spelling for writing a
   literal-quoted string or a hex integer programmatically. If demand
   appears, the shape is constructor functions with style/base parameters
   feeding the canonical-rendering path. Effort: small-to-medium.
@@ -54,7 +54,7 @@ picked up independently after the campaign's release ships.
   Incremental invalidation removes that cost. Effort: medium-to-large;
   design against the fold's structure.
 - **Pre-parsed path type.** A parsed-path value accepted by Lookup/Has and
-  the getters, making hot-path reads allocation-free (today the budget is
+  the getters, making hot-path reads allocation-free (the budget is
   "no allocations beyond path parsing"). Effort: small.
 - **Enum-in-descriptor — OPEN DECISION.** Should the descriptor admit a
   closed value set (choices) per field? Pros: kills the most common
