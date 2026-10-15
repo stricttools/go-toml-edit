@@ -232,6 +232,40 @@ values, err := doc.DecodeSpec(spec)       // validated, then native Go data
 `DecodeSpec` is atomic: it returns a map only when the document has no
 violations at all.
 
+### Reading by hand
+
+A file whose rules go beyond its shape -- a key whose meaning depends on
+another, entries that must not repeat, refusals that say what to write instead
+-- is read key by key through a `Reader`, which reports to a `Collector`:
+
+```go
+var c tomledit.Collector
+if r := c.Read("tool.toml", data); r != nil {
+	name, _ := r.Str("name", true, `name = "<name>"`)
+	fmt.Println(name)
+	for _, cmd := range r.Tables("command") {
+		cmd.Str("help", true, `help = "<one sentence>"`)
+		if cmd.Flag("verbose") { /* ... */ }
+		cmd.Done()
+	}
+	r.Done()
+}
+if err := c.Err(); err != nil {
+	return err
+}
+```
+
+Every key read through a `Reader` becomes known, and `Done` reports every key
+nobody read as unknown (`KindUnknownKey`, or `KindUnknownTable` for a table),
+the same kinds a strict decode reports. A required key that is absent is
+reported at its table's line, a value of the wrong type at its own, and each
+diagnostic carries a `Fix` saying what to write:
+`tool.toml:4: command[0].help: is missing; write help = "<one sentence>"`.
+`Collector.Read` reports a syntax error as a diagnostic with its line, and
+`Collector.Add` takes a decode's diagnostics into the same list. `Err` sorts
+everything by file, line, path, and message, so problems from several files
+read in any order come back as one list in one order.
+
 ### Format
 
 ```go
@@ -316,7 +350,9 @@ Every failure that depends on the document -- parse, decode, edit, access --
 is an `*Error` with a kind, a path and a position, rendered in the compiler
 convention (`config.toml:12:7: server.port: expected integer, got string`). A
 decode reports its violations together as an `*Errors` aggregate, reachable with
-`errors.As`.
+`errors.As`; its `Diagnostics` method lists them. A diagnostic reported through
+a `Reader` names a line without a column and a fix after the message
+(`config.toml:4: server.port: is missing; write port = <integer>`).
 
 ### Diff
 
