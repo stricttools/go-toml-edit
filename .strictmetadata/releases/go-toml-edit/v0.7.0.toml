@@ -9,3 +9,6 @@ context = "strictgo admits a module whose importable packages perform no effects
 # The targets released, and the ones left out; between them they name every target of the releasable's members.
 include = ["go"]
 exclude = []
+release_commit = "82390f4cfeec093064ac5c17a5bf3ecc7045f31d"
+[released_trees]
+"." = "77e629623b5fd4f77bdb293cea2b6853dd787588"
