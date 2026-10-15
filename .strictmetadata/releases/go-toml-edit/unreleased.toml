@@ -1,11 +1,11 @@
 # The next release of go-toml-edit. Fill in bump and description, then run `rlsbl release run --watch`.
 format_version = 2
 # How the release moves the version: patch, minor, major, or infra (moved as a patch, recorded as infra).
-bump = ""
+bump = "minor"
 # What this release is, in a sentence or two. Required.
-description = ""
+description = "A hand-reading front end, `Reader`, over the read layer, and diagnostics that carry a fix and sort across files through `Collector`, so a program reads its own TOML formats with the same refusals a strict decode gives."
 # Why these changes were made. Optional.
-context = ""
+context = "The family's command-model declaration files (strictcli's outline and strictgo's capabilities file) are read by hand with these, replacing a private reader each tool kept."
 # The targets released, and the ones left out; between them they name every target of the releasable's members.
 include = ["go"]
 exclude = []
