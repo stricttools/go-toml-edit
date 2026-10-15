@@ -2,6 +2,21 @@
 
 # Changelog
 
+## 0.7.0
+
+The root package computes only over the values it is handed: reading and writing files moved to the new `tomlfile` subpackage, so strict programs and strict libraries can parse and edit TOML.
+
+<details>
+<summary>Context</summary>
+
+strictgo admits a module whose importable packages perform no effects as a pure module; the file functions made go-toml-edit a host module, which strict code may not import.
+
+</details>
+
+### Breaking
+
+- The tomledit package no longer reads or writes files: ParseFile and Document.WriteFile move to the new tomlfile subpackage as tomlfile.ParseFile(path) and tomlfile.WriteFile(doc, path), with the same behavior. Migration: import github.com/stricttools/go-toml-edit/tomlfile, replace tomledit.ParseFile(path) with tomlfile.ParseFile(path), and doc.WriteFile(path) with tomlfile.WriteFile(doc, path). The root package gains ParseWithFileName(src, file), which records a file name for diagnostics without reading anything, and Document.RoundTripVerifiedBytes(file), which returns the rendered bytes only after they survive a re-parse and a re-render.
+
 ## 0.6.0
 
 A hand-reading front end, `Reader`, over the read layer, and diagnostics that carry a fix and sort across files through `Collector`, so a program reads its own TOML formats with the same refusals a strict decode gives.
