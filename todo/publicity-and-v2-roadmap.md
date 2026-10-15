@@ -1,4 +1,4 @@
-# Publicity and v2 roadmap: remaining scope from the founding document
+# Publicity and later 0.x work: remaining scope from the founding document
 
 > Split from todo/original-idea-remaining.md; the error-handling section is
 > done and moved to todo/.done/error-handling-founding-scope.md. The sections
@@ -18,9 +18,11 @@
 - Submit to TOML's wiki/ecosystem page (https://github.com/toml-lang/toml/wiki) if a Go section exists
 - Tag relevant Go influencers / TOML maintainers on the announcement
 
-## v2 Roadmap
+## Later 0.x work
 
-- Marshal: struct-to-TOML serialization with full struct tag support and comment generation
+Struct-to-TOML Marshal, formerly listed here, is tracked in
+todo/deferred-redesign-work.md.
+
 - TOML 1.1 support when the spec stabilizes
 - Public streaming/event parser for power users (linters, formatters, custom tooling)
 - Performance optimizations (lazy parsing for large files)
