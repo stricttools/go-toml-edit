@@ -1,6 +1,6 @@
 +++
 title = "Design Guide"
-description = "How go-toml-edit works inside: the lex-parse-render pipeline, the sealed AST, the read-layer, fragment dirty tracking, and round-trip fidelity."
+description = "How go-toml-edit works inside: the lex-parse-render pipeline, the sealed AST, the read-layer, fragment dirty tracking, round-trip fidelity, and the split between the pure root package and tomlfile."
 +++
 
 # Design Guide

@@ -1,6 +1,6 @@
 +++
 title = "Usage Guide"
-description = "Parsing, querying, editing and writing TOML with go-toml-edit: the read-layer, path and node comment access, strict decoding, merging and diffing."
+description = "Parsing, querying, editing and writing TOML with go-toml-edit: the read-layer, path and node comment access, strict decoding, merging and diffing, and file access through tomlfile."
 nav_group = "Guides"
 nav_order = 1
 +++

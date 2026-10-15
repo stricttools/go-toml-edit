@@ -1,8 +1,7 @@
 +++
 title = "tomlfile"
-description = "Package tomlfile reads TOML files into tomledit documents and writes documents back to files."
+description = "The tomlfile package reads a TOML file from disk into a tomledit document and writes a document back through a verified temporary file renamed over the target."
 generated = true
-seeded = true
 nav_group = "API Reference"
 nav_order = 2
 +++

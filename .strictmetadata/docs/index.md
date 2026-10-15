@@ -1,5 +1,5 @@
 +++
-description = "Zero-dependency TOML library for Go: edits that preserve comments, strict decoding, and a hand-reading Reader whose diagnostics carry fixes and sort across files"
+description = "Zero-dependency TOML library for Go: comment-preserving edits, strict decoding, and a hand-reading Reader, computed purely over bytes, with file reading and writing in the tomlfile package"
 +++
 
 # go-toml-edit
