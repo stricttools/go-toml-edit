@@ -9,3 +9,6 @@ context = "The family's command-model declaration files (strictcli's outline and
 # The targets released, and the ones left out; between them they name every target of the releasable's members.
 include = ["go"]
 exclude = []
+release_commit = "0a2b9f226801fe6dd28b7b8cb76bc294a614b6e6"
+[released_trees]
+"." = "3bb0961774b4af6c214f8815c7c2c11665744b3a"
