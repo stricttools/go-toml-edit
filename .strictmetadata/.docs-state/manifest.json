@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "name": "go-toml-edit",
+  "name": "release-checkout",
   "slug": "go-toml-edit",
   "version": "0.5.1",
   "description": "Zero-dep TOML editing library for Go with comment preservation",
@@ -4174,7 +4174,7 @@
     }
   ],
   "posts": [],
-  "last_gen": "2026-10-15T01:05:58.529800+00:00",
+  "last_gen": "2026-10-15T02:07:12.436528+00:00",
   "theme": "minimal",
   "vocabulary": {
     "accepted": [

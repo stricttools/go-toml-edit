@@ -1,6 +1,6 @@
 +++
 title = "API Reference"
-description = "API reference index for go-toml-edit covering 1 module"
+description = "API reference index for release-checkout covering 1 module"
 generated = true
 seeded = true
 nav_group = "API Reference"
