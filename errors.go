@@ -3,6 +3,7 @@ package tomledit
 import (
 	"errors"
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -47,6 +48,11 @@ const (
 	// re-parse; the diagnostic's Offset field carries the byte offset of the
 	// first divergence.
 	KindRoundTrip
+	// KindInvalidValue is a value a hand-reading caller refused: present, and
+	// usually of an accepted type, but not a value the caller allows (an empty
+	// list, a false that only restates an absence, a name breaking a rule).
+	// Reader.Errorf, Reader.ErrorfAt and Collector.Errorf report this kind.
+	KindInvalidValue
 )
 
 var errorKindNames = [...]string{
@@ -62,6 +68,7 @@ var errorKindNames = [...]string{
 	KindBadInput:       "bad input",
 	KindConflict:       "conflict",
 	KindRoundTrip:      "round-trip failure",
+	KindInvalidValue:   "invalid value",
 }
 
 // String returns the human-readable name of the kind.
@@ -98,6 +105,7 @@ var (
 	ErrBadInput       error = kindError(KindBadInput)       // an invalid input to an editing operation
 	ErrConflict       error = kindError(KindConflict)       // an edit that would produce an invalid document
 	ErrRoundTrip      error = kindError(KindRoundTrip)      // rendered bytes that did not survive a re-parse
+	ErrInvalidValue   error = kindError(KindInvalidValue)   // a value a hand-reading caller refused
 )
 
 // Error is the one diagnostic type of this package. Parse, edit, and access
@@ -116,9 +124,11 @@ var (
 // extent of the construct it concerns, which for the parse stage means the
 // parser's token diagnostics -- the lexer's and the duplicate-definition
 // tracker's carry the zero Span. Path is filled for path-addressed
-// operations, File whenever the document's origin is known (see ParseFile),
-// and the remaining fields by the kinds documented on ErrorKind. An
-// unpopulated field carries its zero value.
+// operations, File whenever the document's origin is known (see ParseFile and
+// Collector.Read), and the remaining fields by the kinds documented on
+// ErrorKind. A diagnostic reported through a Reader carries a line without a
+// column (Pos.Column is 0), and Fix when the reporting site knows what to write
+// instead. An unpopulated field carries its zero value.
 type Error struct {
 	Kind     ErrorKind // what went wrong
 	Path     string    // document path, in this package's path syntax
@@ -132,36 +142,52 @@ type Error struct {
 	Value    any       // the offending value, for inexact and bad-input kinds
 	Keys     []string  // the direct child keys, for unknown-table diagnostics
 	Offset   int       // KindRoundTrip: first divergence in the rendered bytes
+	Fix      string    // what to do about it ("write port = 8080", "remove it"); empty when unknown
 
 	err error // the underlying error this diagnostic reports, if any
 }
 
 // Error renders the diagnostic in the compiler convention: the location, the
-// path and the message, joined with ": ", with every absent part left out.
-// The location is "file:line:column" when both the file and a position are
-// known, "line:column" with a position alone, and the file alone when there is
-// no position -- so a diagnostic reads as one of
+// path and the message, joined with ": ", with every absent part left out, and
+// the fix, when there is one, after the message and "; ". The location is
+// "file:line:column" when both the file and a position are known,
+// "line:column" with a position alone, and the file alone when there is no
+// position; a position without a column (Pos.Column 0) leaves the column out.
+// A diagnostic reads as one of
 //
 //	config.toml:3:10: expected a value, got end of input
 //	3:10: expected a value, got end of input
 //	config.toml: server.port: key not found
+//	config.toml:4: server.port: is missing; write port = <integer>
 //	server.port: key not found
 //	key not found
 func (e *Error) Error() string {
 	var parts []string
-	switch {
-	case e.File != "" && e.Pos.IsValid():
-		parts = append(parts, fmt.Sprintf("%s:%d:%d", e.File, e.Pos.Line, e.Pos.Column))
-	case e.Pos.IsValid():
-		parts = append(parts, fmt.Sprintf("%d:%d", e.Pos.Line, e.Pos.Column))
-	case e.File != "":
+	if e.Pos.IsValid() {
+		loc := fmt.Sprintf("%d", e.Pos.Line)
+		if e.Pos.Column > 0 {
+			loc += fmt.Sprintf(":%d", e.Pos.Column)
+		}
+		if e.File != "" {
+			loc = e.File + ":" + loc
+		}
+		parts = append(parts, loc)
+	} else if e.File != "" {
 		parts = append(parts, e.File)
 	}
 	if e.Path != "" {
 		parts = append(parts, e.Path)
 	}
-	parts = append(parts, e.Message)
+	parts = append(parts, e.text())
 	return strings.Join(parts, ": ")
+}
+
+// text is the message with the fix, when there is one, after "; ".
+func (e *Error) text() string {
+	if e.Fix == "" {
+		return e.Message
+	}
+	return e.Message + "; " + e.Fix
 }
 
 // Unwrap returns the underlying error this diagnostic reports, or nil.
@@ -174,14 +200,15 @@ func (e *Error) Is(target error) bool {
 	return ok && ErrorKind(k) == e.Kind
 }
 
-// Errors is an aggregate of diagnostics reported together, in document order.
-// It renders as its first diagnostic, so a call site that prints the error
-// reads like a single failure; the whole list is reachable through
-// errors.Unwrap semantics:
+// Errors is an aggregate of diagnostics reported together: in document order
+// from a decode, and sorted by file, line, path, and message from a
+// Collector. It renders as its first diagnostic, so a call site that prints
+// the error reads like a single failure; the whole list is reachable through
+// Diagnostics and through errors.Unwrap semantics:
 //
 //	var all *tomledit.Errors
 //	if errors.As(err, &all) {
-//	    for _, d := range all.Unwrap() { ... }
+//	    for _, d := range all.Diagnostics() { ... }
 //	}
 //
 // errors.As with an *Error target yields the first diagnostic, and errors.Is
@@ -201,13 +228,90 @@ func (e *Errors) Error() string {
 	return e.diags[0].Error()
 }
 
-// Unwrap returns every diagnostic of the aggregate, in document order.
+// Diagnostics returns every diagnostic of the aggregate, in its order. The
+// slice is a copy; the diagnostics are the aggregate's own.
+func (e *Errors) Diagnostics() []*Error {
+	out := make([]*Error, len(e.diags))
+	copy(out, e.diags)
+	return out
+}
+
+// Unwrap returns every diagnostic of the aggregate, in its order.
 func (e *Errors) Unwrap() []error {
 	out := make([]error, len(e.diags))
 	for i, d := range e.diags {
 		out[i] = d
 	}
 	return out
+}
+
+// Collector accumulates diagnostics, from one file or several, and reports
+// them together as one error sorted by file, line, path, and message, so a
+// tool reading a set of files reports every problem in all of them at once, in
+// an order that does not depend on the order the files were read in:
+//
+//	var c tomledit.Collector
+//	if r := c.Read("a.toml", a); r != nil { readA(r) }
+//	if r := c.Read("b.toml", b); r != nil { readB(r) }
+//	if err := c.Err(); err != nil { return err }
+//
+// The zero Collector is empty and ready to use.
+type Collector struct {
+	diags []*Error
+}
+
+// Add records every diagnostic err carries: each one of an *Errors aggregate
+// (a decode's result, say), or the one *Error err is or wraps. An error
+// carrying no diagnostic is recorded as a KindConflict diagnostic wrapping it.
+// A nil err records nothing.
+func (c *Collector) Add(err error) {
+	if err == nil {
+		return
+	}
+	var all *Errors
+	if errors.As(err, &all) {
+		c.diags = append(c.diags, all.diags...)
+		return
+	}
+	c.diags = append(c.diags, asDiagnostic(err))
+}
+
+// Errorf records a KindInvalidValue diagnostic at a line of a file, naming the
+// key path it concerns (in this package's path syntax, such as
+// "command[0].flag[1].name") and a formatted message. It is the form for a
+// problem found across tables or files, which no single Reader owns; within one
+// table, Reader.Errorf names the file, line, and path itself.
+func (c *Collector) Errorf(file string, line int, path, format string, args ...any) {
+	c.diags = append(c.diags, newError(KindInvalidValue, format, args...).atLine(line).inFile(file).atPath(path))
+}
+
+// Len returns how many diagnostics the collector holds.
+func (c *Collector) Len() int { return len(c.diags) }
+
+// Err returns every diagnostic recorded so far, sorted by file, line, path,
+// and message, as an *Errors aggregate, or nil when there are none. The sort
+// is stable, so two diagnostics equal in all four keep the order they were
+// recorded in. Recording more after Err leaves the returned error unchanged.
+func (c *Collector) Err() error {
+	if len(c.diags) == 0 {
+		return nil
+	}
+	sorted := make([]*Error, len(c.diags))
+	copy(sorted, c.diags)
+	sort.SliceStable(sorted, func(i, j int) bool {
+		a, b := sorted[i], sorted[j]
+		if a.File != b.File {
+			return a.File < b.File
+		}
+		if a.Pos.Line != b.Pos.Line {
+			return a.Pos.Line < b.Pos.Line
+		}
+		if a.Path != b.Path {
+			return a.Path < b.Path
+		}
+		return a.text() < b.text()
+	})
+	return newErrors(sorted)
 }
 
 // --- construction ---
@@ -280,6 +384,37 @@ func (e *Error) expects(expected, got string) *Error {
 	e.Expected = expected
 	e.Got = got
 	return e
+}
+
+// withFix records what to do about the diagnostic.
+func (e *Error) withFix(fix string) *Error {
+	e.Fix = fix
+	return e
+}
+
+// atLine records a line-only position: a diagnostic reported through a Reader
+// knows the line a key was written on, and names no column.
+func (e *Error) atLine(line int) *Error {
+	e.Pos = Position{Line: line}
+	return e
+}
+
+// syntaxDiagnostic turns the error Parse returned for the named file into the
+// diagnostic Collector.Read records: the parse diagnostic's kind, position,
+// span, snippet, and message, naming the file, with the fix "write valid TOML".
+// An error carrying no diagnostic, which Parse never returns, is placed on
+// line 1.
+func syntaxDiagnostic(file string, err error) *Error {
+	var diag *Error
+	if !errors.As(err, &diag) {
+		return newError(KindSyntax, "%s", err).atLine(1).withFix("write valid TOML").wrapping(err)
+	}
+	out := *diag
+	out.File = file
+	out.Path = ""
+	out.Fix = "write valid TOML"
+	out.err = err
+	return &out
 }
 
 // listing records the direct child keys of the construct an unknown-table

@@ -12,9 +12,10 @@ import (
 // first diagnostic while exposing all of them.
 
 // Fails if the rendering of a diagnostic stops following the compiler
-// convention -- the location "file:line:column", the path and the message
-// joined with ": " -- or starts including a part the diagnostic does not
-// carry. Every combination of file, position and path presence is covered.
+// convention -- the location "file:line:column" ("file:line" when the column
+// is unknown), the path and the message joined with ": ", and the fix after
+// "; " -- or starts including a part the diagnostic does not carry. Every
+// combination of file, position and path presence is covered.
 func TestErrorRendering(t *testing.T) {
 	tests := []struct {
 		name string
@@ -75,6 +76,24 @@ func TestErrorRendering(t *testing.T) {
 				Pos: Position{Line: 2, Column: 1, Offset: 6}, Message: "duplicate key",
 			},
 			want: "2:1: server.host: duplicate key",
+		},
+		{
+			name: "file, line without a column, path, message and fix",
+			err: &Error{
+				Kind: KindMissingKey, File: "config.toml", Path: "server.port",
+				Pos: Position{Line: 4}, Message: "is missing", Fix: "write port = <integer>",
+			},
+			want: "config.toml:4: server.port: is missing; write port = <integer>",
+		},
+		{
+			name: "line without a column, no file",
+			err:  &Error{Kind: KindInvalidValue, Path: "a", Pos: Position{Line: 7}, Message: "is empty"},
+			want: "7: a: is empty",
+		},
+		{
+			name: "message and fix only",
+			err:  &Error{Kind: KindSyntax, Message: "unexpected character", Fix: "write valid TOML"},
+			want: "unexpected character; write valid TOML",
 		},
 	}
 	for _, tt := range tests {
