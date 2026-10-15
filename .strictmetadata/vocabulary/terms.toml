@@ -3,3 +3,7 @@ format_version = 1
 [[accepted]]
 word = "tomledit"
 meaning = "The Go package name of this project, a comment-preserving TOML parser and editor library imported from github.com/stricttools/go-toml-edit."
+
+[[accepted]]
+word = "tomlfile"
+meaning = "go-toml-edit's subpackage that reads and writes TOML files on disk"
