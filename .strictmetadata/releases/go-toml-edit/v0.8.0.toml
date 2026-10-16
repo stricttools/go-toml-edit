@@ -9,3 +9,22 @@ context = ""
 # The targets released, and the ones left out; between them they name every target of the releasable's members.
 include = ["go"]
 exclude = []
+release_commit = "2403c52f8a31b1fda7da4ece1eaed5df87927530"
+[released_trees]
+"." = "7a0fd2fcd23e83f024df2d034c47a3d350c8f896"
+
+[[confidential_hits]]
+hit = "91dd0dda10578220"
+location = "selfdoc.json, line 34, column 6"
+resolution = "false-positive"
+certainty = 85
+reason = "the common English word inside the selfdoc config key for the blog base URL, not a repository reference"
+recorded = 2026-10-16
+
+[[confidential_hits]]
+hit = "aadc768844079399"
+location = "LICENSE, line 18, column 57"
+resolution = "false-positive"
+certainty = 99
+reason = "substring of an ordinary word in the standard license liability clause"
+recorded = 2026-10-16
