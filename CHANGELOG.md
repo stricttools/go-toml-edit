@@ -2,6 +2,18 @@
 
 # Changelog
 
+## 0.8.0
+
+Typed setters for arrays and ordered inline tables: SetStrings, SetInts, SetFloats, SetBools, and SetInlineTable (each with a SetCreate form), plus the InlineTable builder, so strictgo code that cannot build a []any or map[string]any can write them.
+
+### Features
+
+- **Typed setters for arrays and inline tables.** `SetStrings`, `SetInts`, `SetFloats`, `SetBools`, and `SetInlineTable` (each with a `SetCreate` form) write arrays and ordered inline tables from statically typed values, so strictgo code that cannot build a `[]any` or `map[string]any` can write them; the new `InlineTable` builder takes typed values in order.
+
+### Fixes
+
+- **Documentation: the usage guide no longer says to edit through the AST.** Edits go through `Document` methods addressed by path (`Set`, `SetCreate`, `Delete`, `RenameKey`, the structural operations, and the comment setters); the AST is for inspecting how something was written.
+
 ## 0.7.0
 
 The root package computes only over the values it is handed: reading and writing files moved to the new `tomlfile` subpackage, so strict programs and strict libraries can parse and edit TOML.
