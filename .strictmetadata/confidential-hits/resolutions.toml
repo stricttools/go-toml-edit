@@ -1,0 +1,12 @@
+# How each confidential-term hit in what this repository publishes was
+# resolved: a false positive judged by the agent, or the owner's approval.
+# Written by the release and documentation tools' commands; never by hand.
+format_version = 1
+
+[[resolutions]]
+hit = "91dd0dda10578220"
+location = "selfdoc.json, line 34, column 6"
+resolution = "false-positive"
+certainty = 85
+reason = "the common English word inside the selfdoc config key for the blog base URL, not a repository reference"
+recorded = 2026-10-16
