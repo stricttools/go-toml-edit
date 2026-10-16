@@ -1,9 +1,9 @@
 # The next release of go-toml-edit. Fill in bump and description, then run `rlsbl release run --watch`.
 format_version = 2
 # How the release moves the version: patch, minor, major, or infra (moved as a patch, recorded as infra).
-bump = ""
+bump = "minor"
 # What this release is, in a sentence or two. Required.
-description = ""
+description = "Typed setters for arrays and ordered inline tables: SetStrings, SetInts, SetFloats, SetBools, and SetInlineTable (each with a SetCreate form), plus the InlineTable builder, so strictgo code that cannot build a []any or map[string]any can write them."
 # Why these changes were made. Optional.
 context = ""
 # The targets released, and the ones left out; between them they name every target of the releasable's members.
