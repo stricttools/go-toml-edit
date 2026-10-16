@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "name": "go-toml-edit",
+  "name": "release-checkout",
   "slug": "go-toml-edit",
   "version": "0.7.0",
   "description": "Zero-dep TOML editing library for Go with comment preservation",
@@ -848,6 +848,11 @@
         },
         {
           "level": 3,
+          "text": "`InlineTable`",
+          "anchor": "inlinetable"
+        },
+        {
+          "level": 3,
           "text": "`WalkMode`",
           "anchor": "walkmode"
         },
@@ -2040,6 +2045,101 @@
           "level": 3,
           "text": "`tokenType.String`",
           "anchor": "tokentypestring"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetStrings`",
+          "anchor": "documentsetstrings"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetCreateStrings`",
+          "anchor": "documentsetcreatestrings"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetInts`",
+          "anchor": "documentsetints"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetCreateInts`",
+          "anchor": "documentsetcreateints"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetFloats`",
+          "anchor": "documentsetfloats"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetCreateFloats`",
+          "anchor": "documentsetcreatefloats"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetBools`",
+          "anchor": "documentsetbools"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetCreateBools`",
+          "anchor": "documentsetcreatebools"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetInlineTable`",
+          "anchor": "documentsetinlinetable"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetCreateInlineTable`",
+          "anchor": "documentsetcreateinlinetable"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.String`",
+          "anchor": "inlinetablestring"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.Int`",
+          "anchor": "inlinetableint"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.Float`",
+          "anchor": "inlinetablefloat"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.Bool`",
+          "anchor": "inlinetablebool"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.Strings`",
+          "anchor": "inlinetablestrings"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.Ints`",
+          "anchor": "inlinetableints"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.Floats`",
+          "anchor": "inlinetablefloats"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.Bools`",
+          "anchor": "inlinetablebools"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.Table`",
+          "anchor": "inlinetabletable"
         },
         {
           "level": 3,
@@ -2725,6 +2825,11 @@
         },
         {
           "level": 3,
+          "text": "`InlineTable`",
+          "anchor": "inlinetable"
+        },
+        {
+          "level": 3,
           "text": "`WalkMode`",
           "anchor": "walkmode"
         },
@@ -3920,6 +4025,101 @@
         },
         {
           "level": 3,
+          "text": "`Document.SetStrings`",
+          "anchor": "documentsetstrings"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetCreateStrings`",
+          "anchor": "documentsetcreatestrings"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetInts`",
+          "anchor": "documentsetints"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetCreateInts`",
+          "anchor": "documentsetcreateints"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetFloats`",
+          "anchor": "documentsetfloats"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetCreateFloats`",
+          "anchor": "documentsetcreatefloats"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetBools`",
+          "anchor": "documentsetbools"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetCreateBools`",
+          "anchor": "documentsetcreatebools"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetInlineTable`",
+          "anchor": "documentsetinlinetable"
+        },
+        {
+          "level": 3,
+          "text": "`Document.SetCreateInlineTable`",
+          "anchor": "documentsetcreateinlinetable"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.String`",
+          "anchor": "inlinetablestring"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.Int`",
+          "anchor": "inlinetableint"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.Float`",
+          "anchor": "inlinetablefloat"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.Bool`",
+          "anchor": "inlinetablebool"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.Strings`",
+          "anchor": "inlinetablestrings"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.Ints`",
+          "anchor": "inlinetableints"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.Floats`",
+          "anchor": "inlinetablefloats"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.Bools`",
+          "anchor": "inlinetablebools"
+        },
+        {
+          "level": 3,
+          "text": "`InlineTable.Table`",
+          "anchor": "inlinetabletable"
+        },
+        {
+          "level": 3,
           "text": "`Document.Walk`",
           "anchor": "documentwalk"
         }
@@ -4201,7 +4401,7 @@
     }
   ],
   "posts": [],
-  "last_gen": "2026-10-15T11:45:37.678055+00:00",
+  "last_gen": "2026-10-16T00:26:43.482092+00:00",
   "theme": "minimal",
   "vocabulary": {
     "accepted": [
