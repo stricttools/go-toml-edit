@@ -10,3 +10,11 @@ resolution = "false-positive"
 certainty = 85
 reason = "the common English word inside the selfdoc config key for the blog base URL, not a repository reference"
 recorded = 2026-10-16
+
+[[resolutions]]
+hit = "aadc768844079399"
+location = "LICENSE, line 18, column 57"
+resolution = "false-positive"
+certainty = 99
+reason = "substring of an ordinary word in the standard license liability clause"
+recorded = 2026-10-16
